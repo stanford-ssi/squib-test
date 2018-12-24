@@ -28,10 +28,12 @@
 #ifndef MC33797_H_
 #define MC33797_H_
 
+#include <Arduino.h>
 
-#include "CONFIG_MC33797.h"
-#include "typedefs.h"
-#include "HAL.h"
+//OLD INCLUDES
+//#include "CONFIG_MC33797.h"
+//#include "typedefs.h"
+//#include "HAL.h"
 
 #define SQUIB_E_INVALID_POINTER     0x01U
 #define SQUIB_E_INVALID_CHANNEL     0x02U

@@ -64,11 +64,14 @@
 *******************************************************************************/
 
 #include "MC33797.h"
-#include "typedefs.h"
-#include "Project_Option.h"
-#include "BSD_MC33797.h"
-#include "CONFIG_MC33797.h" /* Four Channel Squib Driver configuration header file */
-#include "Global.h"
+#include <Arduino.h>
+
+//OLD INCLUDES
+//#include "typedefs.h"
+//#include "Project_Option.h"
+//#include "BSD_MC33797.h"
+//#include "CONFIG_MC33797.h" /* Four Channel Squib Driver configuration header file */
+//#include "Global.h"
 
 
 /*********** Arming Commands & Masks ***********/
