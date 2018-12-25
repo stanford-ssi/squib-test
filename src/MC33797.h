@@ -30,6 +30,13 @@
 
 #include <Arduino.h>
 
+
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 //OLD INCLUDES
 //#include "CONFIG_MC33797.h"
 //#include "typedefs.h"
@@ -600,7 +607,7 @@ extern Squib_DriverModeType Squib3_DriverStatus; /* Squib3 driver state */
 *
 ****************************************************************/
 extern Squib_ReturnType Squib_Init(
-  Squib_SpiChannelType Spi_Channel
+  //Squib_SpiChannelType Spi_Channel
 );
 
 extern Squib_ReturnType Squib_Fire(
@@ -622,4 +629,9 @@ extern Squib_ReturnType Squib_ProgramCmd(
 );
 extern Squib_ReturnType Squib_SingleCmd(void);
 
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* MC33797_H_ */
+
