@@ -1,5 +1,5 @@
 /*
-/*******************************************************************************
+*******************************************************************************
 *
 * Freescale Semiconductor Inc.
 * (c) Copyright 2006-2009 Freescale Semiconductor, Inc.
@@ -255,7 +255,7 @@ Squib_ReturnType Squib_Init(Squib_SpiChannelType Spi_Channel)
 #if(SQUIB_DEV_ERROR_DETECTION == STD_ON)
     }
   }
-#endif (SQUIB_DEV_ERROR_DETECTION == STD_ON)
+#endif //(SQUIB_DEV_ERROR_DETECTION == STD_ON)
   return(ret_val);
 }
 
@@ -463,7 +463,7 @@ Squib_ReturnType Squib_GetStatus(Squib_SpiChannelType Spi_Channel, Squib_StatusT
     }else{
       SQB2_70 = SquibCmdResp; /* command 0x70 (Squib 1A Current Measurement Time) */
     }
-  #endif}/* (SQUIB_GUI_COMMUNICATION == STD_ON) */
+  #endif /* (SQUIB_GUI_COMMUNICATION == STD_ON) */
   
   /* Squib 2A current measurement time - commands 0x72 */
   ret_com = Ard_ComSendByte(Spi_Channel, SQB_CMD_2A_CURR_TIME, &SquibCmdResp); /* SPI command - squib 2A current measurement time */

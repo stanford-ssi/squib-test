@@ -35,6 +35,34 @@
 //#include "typedefs.h"
 //#include "HAL.h"
 
+
+//////////////NEW CODEZ
+
+typedef enum {
+  ARD_COM_OK = 0x00U,
+  ARD_COM_NOT_OK = 0xFFU
+} Ard_ComReturnType;
+
+enum {
+  ARD_SPI_SQUIB1,
+  ARD_SPI_SQUIB2,
+  ARD_SPI_SQUIB3
+};
+
+uint8_t SquibCmdResp;
+
+#define NULL_PTR NULL
+#define TRUE true
+
+#define SQUIB_GUI_COMMUNICATION false
+#define STD_ON true
+#define SQUIB_DEV_ERROR_DETECTION false
+#define SQUIB_IC_CONNECTION false
+#define SQUIB_CROSS_COUPLED true
+
+//////////////
+
+
 #define SQUIB_E_INVALID_POINTER     0x01U
 #define SQUIB_E_INVALID_CHANNEL     0x02U
 #define SQUIB_E_INVALID_MEM         0x03U
