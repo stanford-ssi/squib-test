@@ -96,7 +96,12 @@
 #define SQUIB_SPI_ERROR(spi_ret, func_ret) if(spi_ret != ARD_COM_OK) func_ret = SQB_NOT_OK
 
 Ard_ComReturnType Ard_ComSendByte(uint8_t a, uint8_t b, uint8_t *c){
-
+  char * num;
+  debug("sent:");
+  debug_hex(b);
+  *c = send(b);
+  debug("got:");
+  debug_hex(*c);
 }
 
 /*********** Masking definition ***********/
