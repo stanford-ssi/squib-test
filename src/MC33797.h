@@ -606,28 +606,31 @@ extern Squib_DriverModeType Squib3_DriverStatus; /* Squib3 driver state */
 *                   Function prototypes
 *
 ****************************************************************/
-extern Squib_ReturnType Squib_Init(
-  //Squib_SpiChannelType Spi_Channel
-);
+extern Squib_ReturnType Squib_Init();
 
 extern Squib_ReturnType Squib_Fire(
-  //Squib_SpiChannelType Spi_Channel,
   Squib_FireType Squib_Fire
 );
 
 extern Squib_ReturnType Squib_GetStatus(
-  Squib_SpiChannelType Spi_Channel,
   Squib_StatusType *Status
 );
 
 extern Squib_ReturnType Squib_ProgramCmd(
-  Squib_SpiChannelType Spi_Channel,
   Squib_ProgCmdType Command,
   uint8_t Data,  
   uint8_t Delay,
   uint8_t *SpiResponse
 );
 extern Squib_ReturnType Squib_SingleCmd(void);
+
+void debug_hex(uint8_t data);
+
+void debug_bin(uint8_t data);
+
+void debug(const char * data);
+
+uint8_t send(uint8_t data);
 
 #ifdef __cplusplus
 }
