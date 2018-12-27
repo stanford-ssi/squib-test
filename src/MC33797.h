@@ -611,7 +611,7 @@ extern Squib_ReturnType Squib_Init(
 );
 
 extern Squib_ReturnType Squib_Fire(
-  Squib_SpiChannelType Spi_Channel,
+  //Squib_SpiChannelType Spi_Channel,
   Squib_FireType Squib_Fire
 );
 
