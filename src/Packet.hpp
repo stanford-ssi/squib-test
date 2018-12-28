@@ -17,9 +17,10 @@ class Packet
     virtual void read(char* buf, size_t len);
 };
 
-Packet *new_packet(PacketID id);
-
 typedef enum {
   GPS_PKT = 0x02U,
   TELEM_PKT = 0x08U
 } PacketID;
+
+Packet *new_packet(PacketID id);
+

@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include "Packet.hpp"
-#include "GPSPacket.cpp"
+//#include "GPSPacket.cpp"
 
 
 //new data comes in!
@@ -10,11 +10,13 @@ class Train : public Writeable{
     }
 };
 
-void main(){
+int main(){
 
     char data[] = {1,2,3,4};
 
-    Writeable * dest = new Train;
+    Writeable * dest = new Train();
+
+    Writeable & ref = *dest;
 
     PacketID id;
 
@@ -32,7 +34,7 @@ void main(){
             break;
     }
 
-    dest << new_pkt; 
+    ref << new_pkt; 
 
     free(new_pkt);
 

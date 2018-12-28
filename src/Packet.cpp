@@ -3,9 +3,9 @@
 #include "GPSPacket.cpp"
 #include "string.h"
 
-Writeable &operator<<(Writeable &w, Packet &p)
+Writeable &operator<<(Writeable &w, Packet *p)
 {
-    p.write(w);
+    p->write(w);
     return w;
 }
 
