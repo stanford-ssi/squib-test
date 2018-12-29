@@ -105,6 +105,10 @@ def gen_module(packet):
         srcfile.write("\n")
         gen_class(packet, srcfile)
 
+        srcfile.write(f"""
+static {packet["name"]} g_{packet["name"]};
+""")
+
 
 with open("utils/packet.json", "r") as specfile:
     spec = json.load(specfile)

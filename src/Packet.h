@@ -19,5 +19,3 @@ typedef enum {
   GPS_PKT = 0x02U,
   TELEM_PKT = 0x08U
 } PacketID;
-
-Packet *new_packet(PacketID id);

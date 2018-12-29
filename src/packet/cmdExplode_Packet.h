@@ -26,3 +26,5 @@ void write(Writeable& dest){
 
 size_t packet_len() { return length; }
 };
+
+static cmdExplode_Packet g_cmdExplode_Packet;

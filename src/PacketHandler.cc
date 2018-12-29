@@ -5,31 +5,18 @@
 
 //new data comes in!
 class Train : public Writeable{
-    void write(char* msg, size_t len){
-
-    }
+  void write(char* msg, size_t len) {}
 };
 
 int main(){
-    char data[] = {1,2,3,4};
+  char data[] = {1,2,3,4};
 
-    Writeable * dest = new Train();
-    Writeable & ref = *dest;
+  //Writeable * dest = new Train();
+  //Writeable & ref = *dest;
 
-    PacketID id;
-    Packet * new_pkt = new_packet(id);
-    new_pkt->read(data,sizeof(data));
+  Train ref;
 
-    switch (id) {
-        case GPS_PKT:
-            //do something
-            break;
-        case TELEM_PKT:
-            //something else
-            break;
-    }
+  g_GPS_Packet.read(data,sizeof(data));
 
-    ref << new_pkt; 
-
-    free(new_pkt);
+  ref << (&g_GPS_Packet); 
 }

@@ -33,3 +33,5 @@ void write(Writeable& dest){
 
 size_t packet_len() { return length; }
 };
+
+static Telem10Hz_Packet g_Telem10Hz_Packet;
