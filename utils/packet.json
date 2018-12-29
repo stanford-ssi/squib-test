@@ -19,20 +19,32 @@
                     "max": 10
                 },
                 {
+                    "name": "alt",
+                    "encoding": "float",
+                    "bits": 18,
+                    "min": -200,
+                    "max": 200000
+                },
+                {
+                    "name": "datetime",
+                    "encoding": "utc",
+                    "bits": 32
+                },
+                {
                     "name": "lock",
                     "encoding": "bool",
-                    "bits":1
+                    "bits": 1
                 }
             ]
         },
         {
             "name": "Telem10Hz_Packet",
             "id": 4,
-            "fields":[
+            "fields": [
                 {
-                    "name":"state",
-                    "encoding":"int",
-                    "bits":5
+                    "name": "state",
+                    "encoding": "int",
+                    "bits": 5
                 }
             ]
         },
