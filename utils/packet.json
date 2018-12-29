@@ -27,7 +27,7 @@
                 },
                 {
                     "name": "datetime",
-                    "encoding": "utc",
+                    "encoding": "int",
                     "bits": 32
                 },
                 {
