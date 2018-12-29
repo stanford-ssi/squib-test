@@ -28,7 +28,7 @@ void write(Writeable& dest){{
     file.write("  dest.write((char *) &encoded, sizeof(encoded));\n}\n\n")
 
 
-def verifyPacket(packet):
+def verify_packet(packet):
     if "fields" in packet:
         # total bits in packet
         bitlength = sum([field["bits"] for field in packet["fields"]])
@@ -54,21 +54,18 @@ def gen_interface(field, file):
                " new_val){"+field["name"]+" = new_val;}\n\n")
 
 
-def genStruct(packet, file):
+def gen_struct(packet, file):
     structName = packet["name"].lower() + "_t"
-    file.write("typedef struct __attribute__((__packed__)) "+structName+" {\n")
+    file.write(f"typedef struct __attribute__((__packed__)) {structName} {{\n")
 
     if "fields" in packet:
         for field in packet["fields"]:
-            file.write("unsigned " +
-                       field["name"].lower() + " : " + str(field["bits"]) + ";\n")
+            file.write(f"  unsigned {field['name'].lower()} : {str(field['bits'])};\n")
 
-    file.write("} " + structName + ";\n")
+    file.write(f"}} {structName};\n")
     packet["structname"] = structName
 
-
-def genClass(packet, file):
-
+def gen_class(packet, file):
     file.write("class " + packet["name"] + " : public Packet{\n"
                "protected:\n"
                "const size_t length = " + str(packet["length"]) + ";\n"
@@ -91,9 +88,9 @@ def genClass(packet, file):
                "};\n")
 
 
-def genPktCode(packet):
-    verifyPacket(packet)
-    filepath = "src/packet/" + packet["name"] + ".cpp"
+def gen_module(packet):
+    verify_packet(packet)
+    filepath = os.path.join("src/packet/", packet["name"] + ".cpp")
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
     with open(filepath, "w") as srcfile:
         srcfile.write("""\
@@ -104,12 +101,12 @@ def genPktCode(packet):
         )
 
         # generate the packet struct
-        genStruct(packet, srcfile)
+        gen_struct(packet, srcfile)
         srcfile.write("\n")
-        genClass(packet, srcfile)
+        gen_class(packet, srcfile)
 
 
 with open("utils/packet.json", "r") as specfile:
     spec = json.load(specfile)
     for packet in spec["packets"]:
-        genPktCode(packet)
+        gen_module(packet)

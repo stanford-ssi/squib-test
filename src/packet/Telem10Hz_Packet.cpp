@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <cstring>
 typedef struct __attribute__((__packed__)) telem10hz_packet_t {
-unsigned state : 5;
+  unsigned state : 5;
 } telem10hz_packet_t;
 
 class Telem10Hz_Packet : public Packet{

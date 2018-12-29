@@ -2,9 +2,9 @@
 #include <stdint.h>
 #include <cstring>
 typedef struct __attribute__((__packed__)) gps_packet_t {
-unsigned lat : 18;
-unsigned lon : 18;
-unsigned lock : 1;
+  unsigned lat : 18;
+  unsigned lon : 18;
+  unsigned lock : 1;
 } gps_packet_t;
 
 class GPS_Packet : public Packet{
