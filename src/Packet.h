@@ -13,7 +13,7 @@ public:
   virtual size_t packet_len() = 0;
 };
 
-Writeable& operator<<(Writeable &w, Packet *p);
+Writeable& operator<<(Writeable& w, Packet& p);
 
 typedef enum {
   GPS_PKT = 0x02U,

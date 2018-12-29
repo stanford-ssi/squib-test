@@ -18,5 +18,5 @@ int main(){
 
   g_GPS_Packet.read(data,sizeof(data));
 
-  ref << (&g_GPS_Packet); 
+  ref << g_GPS_Packet; 
 }
