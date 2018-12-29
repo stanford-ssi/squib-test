@@ -10,12 +10,14 @@ class Writeable
 class Packet
 {
   public:
-    virtual void encode(char *buf);
-    virtual void decode(char *buf);
-    virtual size_t packet_len() = 0;
+    //virtual void encode(char *buf);
+    //virtual void decode(char *buf);
     virtual void write(Writeable& dest);
     virtual void read(char* buf, size_t len);
+    virtual size_t packet_len() = 0;
 };
+
+Writeable& operator<<(Writeable &w, Packet *p);
 
 typedef enum {
   GPS_PKT = 0x02U,
@@ -23,4 +25,3 @@ typedef enum {
 } PacketID;
 
 Packet *new_packet(PacketID id);
-
