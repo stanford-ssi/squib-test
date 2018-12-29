@@ -1,4 +1,5 @@
-#include "Packet.hpp"
+#pragma once
+#include "Packet.h"
 #include <stdint.h>
 #include <cstring>
 typedef struct __attribute__((__packed__)) cmdexplode_packet_t {

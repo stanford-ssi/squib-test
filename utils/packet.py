@@ -91,11 +91,12 @@ def gen_class(packet, file):
 
 def gen_module(packet):
     verify_packet(packet)
-    filepath = os.path.join("src/packet/", packet["name"] + ".cpp")
+    filepath = os.path.join("src/packet/", packet["name"] + ".h")
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
     with open(filepath, "w") as srcfile:
         srcfile.write("""\
-#include "Packet.hpp"
+#pragma once
+#include "Packet.h"
 #include <stdint.h>
 #include <cstring>
 """
