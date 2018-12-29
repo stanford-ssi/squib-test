@@ -14,8 +14,8 @@ const uint8_t id = 4;
 uint8_t state;
 
 public:
-uint8_t get_state(){return state;}
-void set_state(uint8_t new_val){state = new_val;}
+uint8_t get_state() { return state; }
+void set_state(uint8_t new_val) { state = new_val; }
 
 
 void read(char* buf, size_t len){

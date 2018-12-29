@@ -49,10 +49,8 @@ def verify_packet(packet):
 
 
 def gen_interface(field, file):
-    file.write(field["ctype"] + " get_" + field["name"] +
-               "(){return " + field["name"] + ";}\n")
-    file.write("void set_" + field["name"] + "(" + field["ctype"] +
-               " new_val){"+field["name"]+" = new_val;}\n\n")
+    file.write(f'''{field["ctype"]} get_{field["name"]}() {{ return {field["name"]}; }}\n''')
+    file.write(f'''void set_{field["name"]}({field["ctype"]} new_val) {{ {field["name"]} = new_val; }}\n\n''')
 
 
 def gen_struct(packet, file):

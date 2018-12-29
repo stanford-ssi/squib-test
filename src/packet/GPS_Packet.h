@@ -18,14 +18,14 @@ double lon;
 bool lock;
 
 public:
-double get_lat(){return lat;}
-void set_lat(double new_val){lat = new_val;}
+double get_lat() { return lat; }
+void set_lat(double new_val) { lat = new_val; }
 
-double get_lon(){return lon;}
-void set_lon(double new_val){lon = new_val;}
+double get_lon() { return lon; }
+void set_lon(double new_val) { lon = new_val; }
 
-bool get_lock(){return lock;}
-void set_lock(bool new_val){lock = new_val;}
+bool get_lock() { return lock; }
+void set_lock(bool new_val) { lock = new_val; }
 
 
 void read(char* buf, size_t len){
