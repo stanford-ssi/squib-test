@@ -65,10 +65,11 @@ def gen_struct(packet, file):
     packet["structname"] = structName
 
 def gen_class(packet, file):
-    file.write("class " + packet["name"] + " : public Packet{\n"
+    file.write(f'class {packet["name"]} : public Packet{{\n'
                "protected:\n"
-               "const size_t length = " + str(packet["length"]) + ";\n"
-               "const uint8_t id = " + str(packet["id"]) + ";\n\n")
+#              "const size_t length = " + str(packet["length"]) + ";\n"
+               f'const size_t length = sizeof({packet["structname"]});\n'
+               f'const uint8_t id = {hex(packet["id"])};\n\n')
 
     if "fields" in packet:
         for field in packet["fields"]:

@@ -10,8 +10,8 @@ typedef struct __attribute__((__packed__)) gps_packet_t {
 
 class GPS_Packet : public Packet{
 protected:
-const size_t length = 5;
-const uint8_t id = 12;
+const size_t length = sizeof(gps_packet_t);
+const uint8_t id = 0xc;
 
 double lat;
 double lon;

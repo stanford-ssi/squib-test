@@ -7,8 +7,8 @@ typedef struct __attribute__((__packed__)) cmdexplode_packet_t {
 
 class cmdExplode_Packet : public Packet{
 protected:
-const size_t length = 0;
-const uint8_t id = 6;
+const size_t length = sizeof(cmdexplode_packet_t);
+const uint8_t id = 0x6;
 
 
 public:

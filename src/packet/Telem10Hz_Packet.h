@@ -8,8 +8,8 @@ typedef struct __attribute__((__packed__)) telem10hz_packet_t {
 
 class Telem10Hz_Packet : public Packet{
 protected:
-const size_t length = 1;
-const uint8_t id = 4;
+const size_t length = sizeof(telem10hz_packet_t);
+const uint8_t id = 0x4;
 
 uint8_t state;
 
