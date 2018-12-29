@@ -66,14 +66,13 @@ def gen_struct(packet, file):
 
 def gen_class(packet, file):
     file.write(f'class {packet["name"]} : public Packet{{\n'
-               "protected:\n"
-#              "const size_t length = " + str(packet["length"]) + ";\n"
+               f"protected:\n"
                f'const size_t length = sizeof({packet["structname"]});\n'
                f'const uint8_t id = {hex(packet["id"])};\n\n')
 
     if "fields" in packet:
         for field in packet["fields"]:
-            file.write(field["ctype"] + " " + field["name"]+";\n")
+            file.write(f'{field["ctype"]} {field["name"]};\n')
 
     file.write("\npublic:\n")
 
@@ -84,7 +83,7 @@ def gen_class(packet, file):
     gen_read(packet, file)
     gen_write(packet, file)
 
-    file.write("size_t packet_len(){return length;}\n"
+    file.write("size_t packet_len() { return length; }\n"
                "};\n")
 
 

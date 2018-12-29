@@ -45,5 +45,5 @@ void write(Writeable& dest){
   dest.write((char *) &encoded, sizeof(encoded));
 }
 
-size_t packet_len(){return length;}
+size_t packet_len() { return length; }
 };
