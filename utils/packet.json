@@ -3,7 +3,7 @@
         {
             "name": "GPS_Packet",
             "id": 12,
-            "feilds": [
+            "fields": [
                 {
                     "name": "lat",
                     "encoding": "float",
@@ -28,7 +28,7 @@
         {
             "name": "Telem10Hz_Packet",
             "id": 4,
-            "feilds":[
+            "fields":[
                 {
                     "name":"state",
                     "encoding":"int",

@@ -2,67 +2,66 @@ import os
 import json
 import os.path
 from math import ceil, log2, pow
-# This is a Code Genneration tool!
 
+# This is a code generation tool!
 
 def gen_read(packet, file):
-    file.write("void read(char* buf, size_t len){\n" +
-               packet["structname"] + " encoded;\n"
-               "memcpy(&encoded,buf,len);\n\n")
-
-    if "feilds" in packet:
-        for feild in packet["feilds"]:
-            file.write("//convert " + feild["name"] + "\n")
-
+    file.write(f"""
+void read(char* buf, size_t len){{
+  {packet["structname"]} encoded;
+  memcpy(&encoded,buf,len);""")
+    if "fields" in packet:
+        for field in packet["fields"]:
+            file.write(f"  //convert {field['name']}\n")
     file.write("}\n\n")
 
-
 def gen_write(packet, file):
-    file.write("void write(Writeable& dest){\n" +
-               packet["structname"] + " encoded;\n\n")
+    file.write(f"""
+void write(Writeable& dest){{
+  {packet["structname"]} encoded;
+""")
 
-    if "feilds" in packet:
-        for feild in packet["feilds"]:
-            file.write("//convert " + feild["name"] + "\n")
+    if "fields" in packet:
+        for field in packet["fields"]:
+            file.write(f"  //convert {field['name']}\n")
 
-    file.write("dest.write((char *) &encoded, sizeof(encoded));\n"
-               "}\n\n")
+    file.write("  dest.write((char *) &encoded, sizeof(encoded));\n}\n\n")
 
 
 def verifyPacket(packet):
-    if "feilds" in packet:
+    if "fields" in packet:
         # total bits in packet
-        bitlength = sum([feild["bits"] for feild in packet["feilds"]])
+        bitlength = sum([field["bits"] for field in packet["fields"]])
         # find the right uncompressed c primative type
-        for feild in packet["feilds"]:
-            if feild["encoding"] == "float":
-                feild["ctype"] = "double"
-            elif feild["encoding"] == "int":
-                int_bits = 8*(2**ceil(log2(feild["bits"]/8)))
-                feild["ctype"] = "uint" + str(int_bits) + "_t"
-            elif feild["encoding"] == "bool":
-                feild["ctype"] = "bool"
+        for field in packet["fields"]:
+            if field["encoding"] == "float":
+                field["ctype"] = "double"
+            elif field["encoding"] == "int":
+                int_bits = 8*(2**ceil(log2(field["bits"]/8)))
+                field["ctype"] = "uint" + str(int_bits) + "_t"
+            elif field["encoding"] == "bool":
+                field["ctype"] = "bool"
     else:
         bitlength = 0
     # calculate bytes in packet
     packet["length"] = ceil(bitlength/8)
 
 
-def gen_interface(feild, file):
-    file.write(feild["ctype"] + " get_" + feild["name"] +
-               "(){return " + feild["name"] + ";}\n")
-    file.write("void set_" + feild["name"] + "(" + feild["ctype"] +
-               " new_val){"+feild["name"]+" = new_val;}\n\n")
+def gen_interface(field, file):
+    file.write(field["ctype"] + " get_" + field["name"] +
+               "(){return " + field["name"] + ";}\n")
+    file.write("void set_" + field["name"] + "(" + field["ctype"] +
+               " new_val){"+field["name"]+" = new_val;}\n\n")
 
 
 def genStruct(packet, file):
     structName = packet["name"].lower() + "_t"
     file.write("typedef struct __attribute__((__packed__)) "+structName+" {\n")
 
-    if "feilds" in packet:
-        for feild in packet["feilds"]:
+    if "fields" in packet:
+        for field in packet["fields"]:
             file.write("unsigned " +
-                       feild["name"].lower() + " : " + str(feild["bits"]) + ";\n")
+                       field["name"].lower() + " : " + str(field["bits"]) + ";\n")
 
     file.write("} " + structName + ";\n")
     packet["structname"] = structName
@@ -75,15 +74,15 @@ def genClass(packet, file):
                "const size_t length = " + str(packet["length"]) + ";\n"
                "const uint8_t id = " + str(packet["id"]) + ";\n\n")
 
-    if "feilds" in packet:
-        for feild in packet["feilds"]:
-            file.write(feild["ctype"] + " " + feild["name"]+";\n")
+    if "fields" in packet:
+        for field in packet["fields"]:
+            file.write(field["ctype"] + " " + field["name"]+";\n")
 
     file.write("\npublic:\n")
 
-    if "feilds" in packet:
-        for feild in packet["feilds"]:
-            gen_interface(feild, file)
+    if "fields" in packet:
+        for field in packet["fields"]:
+            gen_interface(field, file)
 
     gen_read(packet, file)
     gen_write(packet, file)
@@ -97,10 +96,12 @@ def genPktCode(packet):
     filepath = "src/packet/" + packet["name"] + ".cpp"
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
     with open(filepath, "w") as srcfile:
-
-        srcfile.write("#include \"Packet.hpp\"\n"
-                      "#include <stdint.h>\n"
-                      "#include <cstring>\n\n")
+        srcfile.write("""\
+#include "Packet.hpp"
+#include <stdint.h>
+#include <cstring>
+"""
+        )
 
         # generate the packet struct
         genStruct(packet, srcfile)
@@ -108,10 +109,7 @@ def genPktCode(packet):
         genClass(packet, srcfile)
 
 
-spec = dict()
-
 with open("utils/packet.json", "r") as specfile:
     spec = json.load(specfile)
-
-for packet in spec["packets"]:
-    genPktCode(packet)
+    for packet in spec["packets"]:
+        genPktCode(packet)
