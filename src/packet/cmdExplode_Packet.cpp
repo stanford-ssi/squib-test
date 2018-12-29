@@ -14,7 +14,8 @@ public:
 
 void read(char* buf, size_t len){
   cmdexplode_packet_t encoded;
-  memcpy(&encoded,buf,len);}
+  memcpy(&encoded,buf,len);
+}
 
 
 void write(Writeable& dest){

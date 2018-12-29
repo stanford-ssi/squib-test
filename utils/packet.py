@@ -9,7 +9,8 @@ def gen_read(packet, file):
     file.write(f"""
 void read(char* buf, size_t len){{
   {packet["structname"]} encoded;
-  memcpy(&encoded,buf,len);""")
+  memcpy(&encoded,buf,len);
+""")
     if "fields" in packet:
         for field in packet["fields"]:
             file.write(f"  //convert {field['name']}\n")

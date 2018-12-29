@@ -19,7 +19,8 @@ void set_state(uint8_t new_val){state = new_val;}
 
 void read(char* buf, size_t len){
   telem10hz_packet_t encoded;
-  memcpy(&encoded,buf,len);  //convert state
+  memcpy(&encoded,buf,len);
+  //convert state
 }
 
 

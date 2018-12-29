@@ -29,7 +29,8 @@ void set_lock(bool new_val){lock = new_val;}
 
 void read(char* buf, size_t len){
   gps_packet_t encoded;
-  memcpy(&encoded,buf,len);  //convert lat
+  memcpy(&encoded,buf,len);
+  //convert lat
   //convert lon
   //convert lock
 }
