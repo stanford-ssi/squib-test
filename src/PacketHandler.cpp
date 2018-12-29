@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include "Packet.hpp"
-//#include "GPSPacket.cpp"
+#include "packet/GPS_Packet.cpp"
 
 
 //new data comes in!

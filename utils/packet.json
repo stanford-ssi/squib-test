@@ -1,0 +1,44 @@
+{
+    "packets": [
+        {
+            "name": "GPS_Packet",
+            "id": 12,
+            "feilds": [
+                {
+                    "name": "lat",
+                    "encoding": "float",
+                    "bits": 18,
+                    "min": 0,
+                    "max": 10
+                },
+                {
+                    "name": "lon",
+                    "encoding": "float",
+                    "bits": 18,
+                    "min": 0,
+                    "max": 10
+                },
+                {
+                    "name": "lock",
+                    "encoding": "bool",
+                    "bits":1
+                }
+            ]
+        },
+        {
+            "name": "Telem10Hz_Packet",
+            "id": 4,
+            "feilds":[
+                {
+                    "name":"state",
+                    "encoding":"int",
+                    "bits":5
+                }
+            ]
+        },
+        {
+            "name": "cmdExplode_Packet",
+            "id": 6
+        }
+    ]
+}

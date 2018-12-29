@@ -12,7 +12,7 @@ class Packet
   public:
     virtual void encode(char *buf);
     virtual void decode(char *buf);
-    virtual int packet_len() = 0;
+    virtual size_t packet_len() = 0;
     virtual void write(Writeable& dest);
     virtual void read(char* buf, size_t len);
 };
