@@ -1,8 +1,8 @@
 {
     "packets": [
         {
-            "name": "GPS_Packet",
-            "id": 12,
+            "name": "MSG_GPS_POS",
+            "id": 8,
             "fields": [
                 {
                     "name": "lat",
@@ -26,31 +26,81 @@
                     "max": 200000
                 },
                 {
-                    "name": "datetime",
-                    "encoding": "int",
-                    "bits": 32
-                },
-                {
-                    "name": "lock",
-                    "encoding": "bool",
-                    "bits": 1
+                    "name": "hdop",
+                    "encoding": "float",
+                    "bits": 8,
+                    "min": 0,
+                    "max": 15
                 }
             ]
         },
         {
-            "name": "Telem10Hz_Packet",
-            "id": 4,
+            "name": "MSG_GPS_TIME",
+            "id": 9,
+            "fields": [
+                {
+                    "name": "utctime",
+                    "encoding": "int",
+                    "bits": 32
+                }
+            ]
+        },
+        {
+            "name": "MSG_SS_FAST",
+            "id": 10,
             "fields": [
                 {
                     "name": "state",
                     "encoding": "int",
-                    "bits": 5
+                    "bits": 4
+                },
+                {
+                    "name": "time",
+                    "encoding": "int",
+                    "bits": 28
                 }
             ]
         },
         {
-            "name": "cmdExplode_Packet",
-            "id": 6
+            "name": "CMD_ARM",
+            "id": 0
+        },
+        {
+            "name": "CMD_DISARM",
+            "id": 1
+        },
+        {
+            "name": "CMD_FORCE_STATE",
+            "id": 2,
+            "fields": [
+                {
+                    "name": "state",
+                    "encoding": "int",
+                    "bits": 4
+                }
+            ]
+        },
+        {
+            "name": "CMD_FORCE_EVENT",
+            "id": 3,
+            "fields": [
+                {
+                    "name": "event",
+                    "encoding": "int",
+                    "bits": 4
+                }
+            ]
+        },
+        {
+            "name": "CMD_GPS",
+            "id": 4,
+            "fields": [
+                {
+                    "name": "power",
+                    "encoding": "bool",
+                    "bits": 1
+                }
+            ]
         }
     ]
 }

@@ -2,24 +2,22 @@
 #include "Packet.h"
 #include <stdint.h>
 #include <cstring>
-typedef struct __attribute__((__packed__)) gps_packet_t {
+typedef struct __attribute__((__packed__)) msg_gps_pos_t {
   unsigned lat : 18;
   unsigned lon : 18;
   unsigned alt : 18;
-  unsigned datetime : 32;
-  unsigned lock : 1;
-} gps_packet_t;
+  unsigned hdop : 8;
+} msg_gps_pos_t;
 
-class GPS_Packet : public Packet{
+class MSG_GPS_POS : public Packet{
 protected:
-const size_t length = sizeof(gps_packet_t);
-const uint8_t id = 0xc;
+const size_t length = sizeof(msg_gps_pos_t);
+const uint8_t id = 0x8;
 
 double lat;
 double lon;
 double alt;
-uint32_t datetime;
-bool lock;
+double hdop;
 
 public:
 double get_lat() { return lat; }
@@ -31,35 +29,30 @@ void set_lon(double new_val) { lon = new_val; }
 double get_alt() { return alt; }
 void set_alt(double new_val) { alt = new_val; }
 
-uint32_t get_datetime() { return datetime; }
-void set_datetime(uint32_t new_val) { datetime = new_val; }
-
-bool get_lock() { return lock; }
-void set_lock(bool new_val) { lock = new_val; }
+double get_hdop() { return hdop; }
+void set_hdop(double new_val) { hdop = new_val; }
 
 
 void read(char* buf, size_t len){
-  gps_packet_t encoded;
+  msg_gps_pos_t encoded;
   memcpy(&encoded,buf,len);
   //convert lat
   //convert lon
   //convert alt
-  //convert datetime
-  //convert lock
+  //convert hdop
 }
 
 
 void write(Writeable& dest){
-  gps_packet_t encoded;
+  msg_gps_pos_t encoded;
   //convert lat
   //convert lon
   //convert alt
-  //convert datetime
-  //convert lock
+  //convert hdop
   dest.write((char *) &encoded, sizeof(encoded));
 }
 
 size_t packet_len() { return length; }
 };
 
-static GPS_Packet g_GPS_Packet;
+static MSG_GPS_POS g_MSG_GPS_POS;
