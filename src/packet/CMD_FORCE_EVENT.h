@@ -9,7 +9,7 @@ typedef struct __attribute__((__packed__)) cmd_force_event_t {
 class CMD_FORCE_EVENT : public Packet{
 protected:
 const size_t length = sizeof(cmd_force_event_t);
-const uint8_t id = 0x3;
+const uint8_t id = 0x6;
 
 uint4.0_t event;
 

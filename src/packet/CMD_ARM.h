@@ -8,7 +8,7 @@ typedef struct __attribute__((__packed__)) cmd_arm_t {
 class CMD_ARM : public Packet{
 protected:
 const size_t length = sizeof(cmd_arm_t);
-const uint8_t id = 0x0;
+const uint8_t id = 0x3;
 
 
 public:

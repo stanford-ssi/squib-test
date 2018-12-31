@@ -10,7 +10,7 @@ typedef struct __attribute__((__packed__)) msg_ss_fast_t {
 class MSG_SS_FAST : public Packet{
 protected:
 const size_t length = sizeof(msg_ss_fast_t);
-const uint8_t id = 0xa;
+const uint8_t id = 0x2;
 
 uint4.0_t state;
 uint32_t time;

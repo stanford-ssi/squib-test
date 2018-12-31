@@ -2,7 +2,6 @@
     "packets": [
         {
             "name": "MSG_GPS_POS",
-            "id": 8,
             "fields": [
                 {
                     "name": "lat",
@@ -36,7 +35,6 @@
         },
         {
             "name": "MSG_GPS_TIME",
-            "id": 9,
             "fields": [
                 {
                     "name": "utctime",
@@ -47,7 +45,6 @@
         },
         {
             "name": "MSG_SS_FAST",
-            "id": 10,
             "fields": [
                 {
                     "name": "state",
@@ -62,16 +59,13 @@
             ]
         },
         {
-            "name": "CMD_ARM",
-            "id": 0
+            "name": "CMD_ARM"
         },
         {
-            "name": "CMD_DISARM",
-            "id": 1
+            "name": "CMD_DISARM"
         },
         {
             "name": "CMD_FORCE_STATE",
-            "id": 2,
             "fields": [
                 {
                     "name": "state",
@@ -82,7 +76,6 @@
         },
         {
             "name": "CMD_FORCE_EVENT",
-            "id": 3,
             "fields": [
                 {
                     "name": "event",
@@ -93,7 +86,6 @@
         },
         {
             "name": "CMD_GPS",
-            "id": 4,
             "fields": [
                 {
                     "name": "power",

@@ -112,5 +112,8 @@ static {packet["name"]} g_{packet["name"]};
 
 with open("utils/packet.json", "r") as specfile:
     spec = json.load(specfile)
+    id = 0
     for packet in spec["packets"]:
+        packet["id"] = id
+        id += 1
         gen_module(packet)

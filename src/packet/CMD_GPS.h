@@ -9,7 +9,7 @@ typedef struct __attribute__((__packed__)) cmd_gps_t {
 class CMD_GPS : public Packet{
 protected:
 const size_t length = sizeof(cmd_gps_t);
-const uint8_t id = 0x4;
+const uint8_t id = 0x7;
 
 bool power;
 

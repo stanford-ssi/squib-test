@@ -9,7 +9,7 @@ typedef struct __attribute__((__packed__)) msg_gps_time_t {
 class MSG_GPS_TIME : public Packet{
 protected:
 const size_t length = sizeof(msg_gps_time_t);
-const uint8_t id = 0x9;
+const uint8_t id = 0x1;
 
 uint32_t utctime;
 

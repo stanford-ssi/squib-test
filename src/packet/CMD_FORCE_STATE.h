@@ -9,7 +9,7 @@ typedef struct __attribute__((__packed__)) cmd_force_state_t {
 class CMD_FORCE_STATE : public Packet{
 protected:
 const size_t length = sizeof(cmd_force_state_t);
-const uint8_t id = 0x2;
+const uint8_t id = 0x5;
 
 uint4.0_t state;
 

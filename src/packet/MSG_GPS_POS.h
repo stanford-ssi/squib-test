@@ -12,7 +12,7 @@ typedef struct __attribute__((__packed__)) msg_gps_pos_t {
 class MSG_GPS_POS : public Packet{
 protected:
 const size_t length = sizeof(msg_gps_pos_t);
-const uint8_t id = 0x8;
+const uint8_t id = 0x0;
 
 double lat;
 double lon;
