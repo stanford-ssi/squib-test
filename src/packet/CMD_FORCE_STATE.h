@@ -11,11 +11,11 @@ protected:
 const size_t length = sizeof(cmd_force_state_t);
 const uint8_t id = 0x5;
 
-uint4.0_t state;
+uint8_t state;
 
 public:
-uint4.0_t get_state() { return state; }
-void set_state(uint4.0_t new_val) { state = new_val; }
+uint8_t get_state() { return state; }
+void set_state(uint8_t new_val) { state = new_val; }
 
 
 void read(char* buf, size_t len){

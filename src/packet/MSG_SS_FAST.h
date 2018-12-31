@@ -12,12 +12,12 @@ protected:
 const size_t length = sizeof(msg_ss_fast_t);
 const uint8_t id = 0x2;
 
-uint4.0_t state;
+uint8_t state;
 uint32_t time;
 
 public:
-uint4.0_t get_state() { return state; }
-void set_state(uint4.0_t new_val) { state = new_val; }
+uint8_t get_state() { return state; }
+void set_state(uint8_t new_val) { state = new_val; }
 
 uint32_t get_time() { return time; }
 void set_time(uint32_t new_val) { time = new_val; }

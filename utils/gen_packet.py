@@ -38,8 +38,8 @@ def verify_packet(packet):
             if field["encoding"] == "float":
                 field["ctype"] = "double"
             elif field["encoding"] == "int":
-                int_bits = 8*(2**ceil(log2(field["bits"]/8)))
-                field["ctype"] = "uint" + str(int_bits) + "_t"
+                int_bits = 8*ceil((2**ceil(log2(field["bits"]/8))))
+                field["ctype"] = "uint" + str(int(int_bits)) + "_t"
             elif field["encoding"] == "bool":
                 field["ctype"] = "bool"
     else:

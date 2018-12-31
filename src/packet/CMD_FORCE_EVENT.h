@@ -11,11 +11,11 @@ protected:
 const size_t length = sizeof(cmd_force_event_t);
 const uint8_t id = 0x6;
 
-uint4.0_t event;
+uint8_t event;
 
 public:
-uint4.0_t get_event() { return event; }
-void set_event(uint4.0_t new_val) { event = new_val; }
+uint8_t get_event() { return event; }
+void set_event(uint8_t new_val) { event = new_val; }
 
 
 void read(char* buf, size_t len){
