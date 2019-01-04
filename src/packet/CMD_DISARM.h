@@ -4,6 +4,7 @@
 #include <cstring>
 typedef struct __attribute__((__packed__)) cmd_disarm_t {
 } cmd_disarm_t;
+static_assert(sizeof(cmd_disarm_t) == 0, "cmd_disarm_t: unexpected packed length");
 
 class CMD_DISARM : public Packet{
 protected:

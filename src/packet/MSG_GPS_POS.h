@@ -8,6 +8,7 @@ typedef struct __attribute__((__packed__)) msg_gps_pos_t {
   unsigned alt : 18;
   unsigned hdop : 8;
 } msg_gps_pos_t;
+static_assert(sizeof(msg_gps_pos_t) == 8, "msg_gps_pos_t: unexpected packed length");
 
 class MSG_GPS_POS : public Packet{
 protected:

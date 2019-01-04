@@ -5,6 +5,7 @@
 typedef struct __attribute__((__packed__)) cmd_force_state_t {
   unsigned state : 4;
 } cmd_force_state_t;
+static_assert(sizeof(cmd_force_state_t) == 1, "cmd_force_state_t: unexpected packed length");
 
 class CMD_FORCE_STATE : public Packet{
 protected:

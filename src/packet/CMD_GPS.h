@@ -5,6 +5,7 @@
 typedef struct __attribute__((__packed__)) cmd_gps_t {
   unsigned power : 1;
 } cmd_gps_t;
+static_assert(sizeof(cmd_gps_t) == 1, "cmd_gps_t: unexpected packed length");
 
 class CMD_GPS : public Packet{
 protected:

@@ -6,6 +6,7 @@ typedef struct __attribute__((__packed__)) msg_ss_fast_t {
   unsigned state : 4;
   unsigned time : 28;
 } msg_ss_fast_t;
+static_assert(sizeof(msg_ss_fast_t) == 4, "msg_ss_fast_t: unexpected packed length");
 
 class MSG_SS_FAST : public Packet{
 protected:
