@@ -228,7 +228,6 @@ Squib_ReturnType Squib_GetStatus(Squib_StatusType *Status)
     }
     else
     {
-
       /* VDIAG_1 and VDIAG_2 diagnostics - command 0xC6 */
       ret_com = Ard_ComSendByte(SQB_CMD_VDIAG, &SquibCmdResp); /* SPI command - VDIAG_1 and VDIAG_2 diagnostics */
       delay(SQB_MEASUREMENT_DELAY_LONG);                       /* measurement waiting */
@@ -399,24 +398,24 @@ Squib_ReturnType Squib_GetStatus(Squib_StatusType *Status)
       ret_com = Ard_ComSendByte(SQB_CMD_SHORTS_1B_STAT, &SquibCmdResp); /* SPI command - shorts between Squib loops, Squib 1B */
       delay(SQB_MEASUREMENT_DELAY);                                     /* measurement waiting */
       SQUIB_SPI_ERROR(ret_com, ret_val);                                /* if SPI communication error? */
-                                                                        //WARNING TIM! Status->Squib_Stat1ALoopsShorts = SquibCmdResp; /* whole byte - response to the previous command 0xE0 */
+      Status->Squib_Stat1ALoopsShorts = SquibCmdResp; /* whole byte - response to the previous command 0xE0 */
 
       /* Shorts between Squib loops, Squib 2A - command 0xE2 */
       ret_com = Ard_ComSendByte(SQB_CMD_SHORTS_2A_STAT, &SquibCmdResp); /* SPI command - shorts between Squib loops, Squib 2A */
       delay(SQB_MEASUREMENT_DELAY);                                     /* measurement waiting */
       SQUIB_SPI_ERROR(ret_com, ret_val);                                /* if SPI communication error? */
-                                                                        //Status->Squib_Stat1BLoopsShorts = SquibCmdResp; /* whole byte - response to the previous command 0xE1 */
+      Status->Squib_Stat1BLoopsShorts = SquibCmdResp; /* whole byte - response to the previous command 0xE1 */
 
       /* Shorts between Squib loops, Squib 2B - command 0xE3 */
       ret_com = Ard_ComSendByte(SQB_CMD_SHORTS_2B_STAT, &SquibCmdResp); /* SPI command - shorts between Squib loops, Squib 2B */
       delay(SQB_MEASUREMENT_DELAY);                                     /* measurement waiting */
       SQUIB_SPI_ERROR(ret_com, ret_val);                                /* if SPI communication error? */
-                                                                        //Status->Squib_Stat2ALoopsShorts = SquibCmdResp; /* whole byte - response to the previous command 0xE2 */
+      Status->Squib_Stat2ALoopsShorts = SquibCmdResp; /* whole byte - response to the previous command 0xE2 */
 
       /* NOP command - command 0x00 */
       ret_com = Ard_ComSendByte(SQB_CMD_NOP, &SquibCmdResp); /* read last response from the SQUIB driver and stop diagnostics */
       SQUIB_SPI_ERROR(ret_com, ret_val);                     /* if SPI communication error? */
-                                                             //Status->Squib_Stat2BLoopsShorts = SquibCmdResp; /* whole byte - response to the previous command 0xE3 */
+      Status->Squib_Stat2BLoopsShorts = SquibCmdResp; /* whole byte - response to the previous command 0xE3 */
 
       /* Shorts between Squib loops for additional ICs - command 0xE8 */
 

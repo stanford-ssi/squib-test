@@ -30,31 +30,14 @@
 
 #include <Arduino.h>
 
-
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//OLD INCLUDES
-//#include "CONFIG_MC33797.h"
-//#include "typedefs.h"
-//#include "HAL.h"
-
-
-//////////////NEW CODEZ
 
 typedef enum {
   ARD_COM_OK = 0x00U,
   ARD_COM_NOT_OK = 0xFFU
 } Ard_ComReturnType;
-
-enum {
-  ARD_SPI_SQUIB1,
-  ARD_SPI_SQUIB2,
-  ARD_SPI_SQUIB3
-};
 
 uint8_t SquibCmdResp;
 
@@ -66,8 +49,6 @@ uint8_t SquibCmdResp;
 #define SQUIB_DEV_ERROR_DETECTION false
 #define SQUIB_IC_CONNECTION false
 #define SQUIB_CROSS_COUPLED true
-
-//////////////
 
 
 #define SQUIB_E_INVALID_POINTER     0x01U
@@ -105,8 +86,8 @@ typedef enum {
 } Squib_DriverModeType;
 
 /*! @brief Squib Diagnostic Delay Time */
-#define SQB_MEASUREMENT_DELAY          3080 /* ~1ms, fBUS = 40MHz */
-#define SQB_MEASUREMENT_DELAY_LONG     6160 /* ~2ms, fBUS = 40MHz */
+#define SQB_MEASUREMENT_DELAY      1 //    3080 /* ~1ms, fBUS = 40MHz */
+#define SQB_MEASUREMENT_DELAY_LONG 2 //    6160 /* ~2ms, fBUS = 40MHz */
 
 /******************** PROGRAMMING AND DIAGNOSTICS COMMANDS *********************/
 
@@ -542,64 +523,6 @@ typedef struct {
   Squib_StatLoopsShortsAddICType Squib_Stat2BLoopsShortsAddIC; /* SPI command 0xE8 */
 } Squib_StatusType;
 
-/***************************************************************
-*
-*                     Global variables  
-*
-****************************************************************/
-
-extern Squib_DriverModeType Squib1_DriverStatus; /* Squib1 driver state */
-extern Squib_DriverModeType Squib2_DriverStatus; /* Squib2 driver state */
-extern Squib_DriverModeType Squib3_DriverStatus; /* Squib3 driver state */
-
-#if(SQUIB_GUI_COMMUNICATION == STD_ON)
-  extern uint8_t SQB1_70; /* command 0x70 (Squib 1A Current Measurement Time) */
-  extern uint8_t SQB1_71; /* command 0x71 (Squib 1B current measurement time) */
-  extern uint8_t SQB1_72; /* command 0x72 (Squib 2A current measurement time) */
-  extern uint8_t SQB1_73; /* command 0x73 (Squib 2B current measurement time) */
-  extern uint8_t SQB1_79; /* command 0x79 (Squib 1X current limit status) */
-  extern uint8_t SQB1_7F; /* command 0x7F (Thermal shutdown status) */
-  extern uint8_t SQB1_C0; /* command 0xC0 (Vdiag and High-side safing sensor diagnostics) */
-  extern uint8_t SQB1_C1; /* command 0xC1 (Squib short-to-ground/short-to-battery diagnostics) */
-  extern uint8_t SQB1_C2; /* command 0xC2 (Low-Side driver continuity status sent to SQUIB) */
-  extern uint8_t SQB1_C3; /* command 0xC3 (Harness short-to-ground / short-to-battery with Squib open - no Squib present) */
-  extern uint8_t SQB1_C5; /* command 0xC5 (VFIRE_1B and VFIRE_2B voltage) */
-  extern uint8_t SQB1_C6; /* command 0xC6 (VDIAG_1 and VDIAG_2 diagnostics) */
-  extern uint8_t SQB1_C8; /* command 0xC8 (FEN status, R_LIMIT_X, R_DIAG status, IC type) */
-  extern uint8_t SQB1_C9; /* command 0xC9 (VFIRE_RTN Status - Open Ground) */
-  extern uint8_t SQB1_D0; /* command 0xD0 (Squib 1A resistance) */
-  extern uint8_t SQB1_D1; /* command 0xD1 (Squib 1B resistance) */    
-  extern uint8_t SQB1_D2; /* command 0xD2 (Squib 2A resistance) */
-  extern uint8_t SQB1_D3; /* command 0xD3 (Squib 2B resistance) */
-  extern uint8_t SQB1_E0; /* command 0xE0 (Shorts between Squib loops, Squib 1A) */
-  extern uint8_t SQB1_E1; /* command 0xE1 (Shorts between Squib loops, Squib 1B) */
-  extern uint8_t SQB1_E2; /* command 0xE2 (Shorts between Squib loops, Squib 2A) */
-  extern uint8_t SQB1_E3; /* command 0xE3 (Shorts between Squib loops, Squib 2B) */
-  extern uint8_t SQB1_E8; /* command 0xE8 (Shorts Between Squib Loops, for Additional ICs) */
-  extern uint8_t SQB2_70; /* command 0x70 (Squib 1A Current Measurement Time) */
-  extern uint8_t SQB2_71; /* command 0x71 (Squib 1B current measurement time) */
-  extern uint8_t SQB2_72; /* command 0x72 (Squib 2A current measurement time) */
-  extern uint8_t SQB2_73; /* command 0x73 (Squib 2B current measurement time) */
-  extern uint8_t SQB2_79; /* command 0x79 (Squib 1X current limit status) */
-  extern uint8_t SQB2_7F; /* command 0x7F (Thermal shutdown status) */
-  extern uint8_t SQB2_C0; /* command 0xC0 (Vdiag and High-side safing sensor diagnostics) */
-  extern uint8_t SQB2_C1; /* command 0xC1 (Squib short-to-ground/short-to-battery diagnostics) */
-  extern uint8_t SQB2_C2; /* command 0xC2 (Low-Side driver continuity status sent to SQUIB) */
-  extern uint8_t SQB2_C3; /* command 0xC3 (Harness short-to-ground / short-to-battery with Squib open - no Squib present) */
-  extern uint8_t SQB2_C5; /* command 0xC5 (VFIRE_1B and VFIRE_2B voltage) */
-  extern uint8_t SQB2_C6; /* command 0xC6 (VDIAG_1 and VDIAG_2 diagnostics) */
-  extern uint8_t SQB2_C8; /* command 0xC8 (FEN status, R_LIMIT_X, R_DIAG status, IC type) */
-  extern uint8_t SQB2_C9; /* command 0xC9 (VFIRE_RTN Status - Open Ground) */
-  extern uint8_t SQB2_D0; /* command 0xD0 (Squib 1A resistance) */
-  extern uint8_t SQB2_D1; /* command 0xD1 (Squib 1B resistance) */    
-  extern uint8_t SQB2_D2; /* command 0xD2 (Squib 2A resistance) */
-  extern uint8_t SQB2_D3; /* command 0xD3 (Squib 2B resistance) */
-  extern uint8_t SQB2_E0; /* command 0xE0 (Shorts between Squib loops, Squib 1A) */
-  extern uint8_t SQB2_E1; /* command 0xE1 (Shorts between Squib loops, Squib 1B) */
-  extern uint8_t SQB2_E2; /* command 0xE2 (Shorts between Squib loops, Squib 2A) */
-  extern uint8_t SQB2_E3; /* command 0xE3 (Shorts between Squib loops, Squib 2B) */
-  extern uint8_t SQB2_E8; /* command 0xE8 (Shorts Between Squib Loops, for Additional ICs) */
-#endif /* (SQUIB_GUI_COMMUNICATION == STD_ON) */
 
 /***************************************************************
 *
