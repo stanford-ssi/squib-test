@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include "Packet.h"
-#include "packet/GPS_Packet.h"
+#include "packet/CMD_GPS.h"
 
 
 //new data comes in!
@@ -16,7 +16,7 @@ int main(){
 
   Train ref;
 
-  g_GPS_Packet.read(data,sizeof(data));
+  g_CMD_GPS.read(data,sizeof(data));
 
-  ref << g_GPS_Packet; 
+  ref << g_CMD_GPS; 
 }

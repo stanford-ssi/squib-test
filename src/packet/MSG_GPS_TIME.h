@@ -5,6 +5,7 @@
 typedef struct __attribute__((__packed__)) msg_gps_time_t {
   unsigned utctime : 32;
 } msg_gps_time_t;
+static_assert(sizeof(msg_gps_time_t) == 4, "msg_gps_time_t: unexpected packed length");
 
 class MSG_GPS_TIME : public Packet{
 protected:

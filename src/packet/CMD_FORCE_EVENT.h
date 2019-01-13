@@ -5,6 +5,7 @@
 typedef struct __attribute__((__packed__)) cmd_force_event_t {
   unsigned event : 4;
 } cmd_force_event_t;
+static_assert(sizeof(cmd_force_event_t) == 1, "cmd_force_event_t: unexpected packed length");
 
 class CMD_FORCE_EVENT : public Packet{
 protected:

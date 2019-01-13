@@ -62,6 +62,7 @@ def gen_struct(packet, file):
             file.write(f"  unsigned {field['name'].lower()} : {str(field['bits'])};\n")
 
     file.write(f"}} {structName};\n")
+    file.write(f'static_assert(sizeof({structName}) == {packet["length"]}, "{structName}: unexpected packed length");\n');
     packet["structname"] = structName
 
 def gen_class(packet, file):
