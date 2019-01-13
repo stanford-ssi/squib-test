@@ -1,17 +1,27 @@
 #include "JobQueue.h"
+#include "Arduino.h"
 
 void JobQueue::loop() {
-  if (empty()) return;
-  // disable interrupts
+  noInterrupts();
+
+  if (empty()) {
+    interrupts();
+    return;
+  }
   job_t job = todo[head];
   head = (head + 1) % JOB_QUEUE_MAX;
-  // enable interrupts
+  interrupts();
+
   job.task();
 }
 
 bool JobQueue::schedule(std::function<void()> task, priority_t priority) {
-  if (full()) return false;
-  // disable interrupts
+  noInterrupts();
+
+  if (full()) {
+    interrupts();
+    return false;
+  };
   size_t cursor = tail;
   while (cursor != head) {
     size_t prev = (cursor - 1) % JOB_QUEUE_MAX;
@@ -23,7 +33,8 @@ bool JobQueue::schedule(std::function<void()> task, priority_t priority) {
   todo[cursor].task = task;
   todo[cursor].priority = priority;
   tail = (tail + 1) % JOB_QUEUE_MAX;
-  // enable interrupts
+  interrupts();
+
   return true;
 }
 
