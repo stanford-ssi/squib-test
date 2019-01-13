@@ -12,10 +12,24 @@ void JobQueue::loop() {
   head = (head + 1) % JOB_QUEUE_MAX;
   interrupts();
 
-  job.task();
+  if (job.when <= millis()) {
+    job.task();
+    if (job.priority == RECURRING_PRIORITY) {
+      schedule(job.task, RECURRING_PRIORITY, job.when + job.delay, job.delay);
+    }
+  } else {
+    if (job.priority == RECURRING_PRIORITY) {
+      schedule(job.task, RECURRING_PRIORITY, job.when, job.delay);
+    }
+  }
 }
 
-bool JobQueue::schedule(std::function<void()> task, priority_t priority) {
+bool JobQueue::schedule(
+  std::function<void()> task,
+  priority_t priority,
+  uint32_t when,
+  uint32_t delay
+) {
   noInterrupts();
 
   if (full()) {
@@ -30,8 +44,12 @@ bool JobQueue::schedule(std::function<void()> task, priority_t priority) {
     } else break;
     cursor = prev;
   }
-  todo[cursor].task = task;
+
   todo[cursor].priority = priority;
+  todo[cursor].when = when;
+  todo[cursor].delay = delay;
+  todo[cursor].task = task;
+
   tail = (tail + 1) % JOB_QUEUE_MAX;
   interrupts();
 
