@@ -35,6 +35,7 @@ JobQueue Q;
 int main() {
   Q.schedule([]{std::cout << "Hello!" << std::endl;});
   Q.schedule([]{std::cout << "Goodbye!" << std::endl;}, JobQueue::HIGH_PRIORITY);
+  Q.schedule([]{std::cout << "DING DONG!" << std::endl;}, JobQueue::RECURRING_PRIORITY, millis(), 100);
   while (true) {
     Q.loop();
   }
