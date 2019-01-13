@@ -13,9 +13,9 @@ public:
     std::function<void()> task,
     priority_t priority = REGULAR_PRIORITY
   );
+private:
   bool empty() const;
   bool full() const;
-private:
   typedef struct {
     priority_t priority;
     std::function<void ()> task;
