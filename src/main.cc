@@ -3,6 +3,25 @@
 #include <SPI.h>
 #include "min.h"
 
+#define S6C Serial1
+
+struct min_context min_ctx;
+uint8_t cur_min_id; 
+
+uint32_t min_time_ms(void)
+{
+  return millis();
+}
+
+void min_application_handler(uint8_t min_id, uint8_t *min_payload,
+    uint8_t len_payload, uint8_t port)
+{
+  if (*min_payload == 0x51) {
+    Squib_Fire(CMD_FIRE_1A);
+  }
+  cur_min_id = min_id + 1;
+}
+
 const int slaveSelectPin = 10;
 const int enablePin = 9;
 
@@ -14,19 +33,27 @@ void setup()
   digitalWrite(slaveSelectPin, HIGH);
   digitalWrite(enablePin, HIGH);
   SPI.begin();
-}
 
-void loop()
-{
   delay(1000);
   uint8_t ret = Squib_Init();
   Serial.print("Init: ");
   Serial.println(ret);
 
-  Squib_StatusType *s = new Squib_StatusType();
+  min_init_context(&min_ctx, 0);
+}
 
+void loop()
+{
+  char buf[32];
+  size_t buf_len;
+  if (S6C.available() > 0) buf_len = S6C.readBytes(buf, 32);
+  else buf_len = 0;
+  min_poll(&min_ctx, (uint8_t *)buf, (uint8_t)buf_len);
+
+/*
   while (true)
   {
+    Squib_StatusType *s = new Squib_StatusType();
     ret = Squib_GetStatus(s);
     Serial.print("Status: ");
     Serial.println(ret);
@@ -59,6 +86,7 @@ void loop()
       Serial.println(ret);
     }
   }
+*/
 }
 
 extern "C"
