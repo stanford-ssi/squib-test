@@ -8,6 +8,7 @@ class Train : public Writeable{
   void write(char* msg, size_t len) {}
 };
 
+/*
 int main(){
   char data[] = {1,2,3,4};
 
@@ -20,3 +21,4 @@ int main(){
 
   ref << g_CMD_GPS; 
 }
+*/
