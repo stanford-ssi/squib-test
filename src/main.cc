@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "MC33797.h"
 #include <SPI.h>
+#include "min.h"
 
 const int slaveSelectPin = 10;
 const int enablePin = 9;
