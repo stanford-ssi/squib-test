@@ -5,8 +5,17 @@
 
 #define S6C Serial1
 
+const size_t header_size = 2;
+const size_t buf_size = 64;
+const char *ack_message = "RECEIVED";
+
+char buf[buf_size];
+size_t buf_len;
+
 struct min_context min_ctx;
 uint8_t cur_min_id; 
+unsigned long last_report = 0;
+Squib_StatusType *stat;
 
 uint32_t min_time_ms(void)
 {
@@ -16,7 +25,20 @@ uint32_t min_time_ms(void)
 void min_application_handler(uint8_t min_id, uint8_t *min_payload,
     uint8_t len_payload, uint8_t port)
 {
-  Serial.println("Aw hell yeah");
+  // increment min_id to be sequential
+  cur_min_id = min_id + 1;
+
+  // send acknowledgement message
+  /* 
+  size_t ack_size = strlen(ack_message);
+  char ack_buf[ack_size + 2];
+  ack_buf[0] = 0;
+  ack_buf[1] = strlen(ack_message);
+  strncpy(ack_buf + 2, ack_message, ack_size);
+  min_send_frame(&min_ctx, cur_min_id++, (uint8_t *)ack_buf, (uint8_t)ack_size + 2);
+  */
+
+  // Serial.println("Aw hell yeah");
   Serial.write((char *) min_payload, len_payload);
   Serial.println(*min_payload);
   if (((char *)min_payload)[1] == 'X') {
@@ -26,9 +48,7 @@ void min_application_handler(uint8_t min_id, uint8_t *min_payload,
   if (((char *)min_payload)[1] == 'Z') {
     Serial.println("NO BOOM NO BOOM");
     Squib_Fire(CMD_FIRE_NO_SQUIBS);
-  }
-  cur_min_id = min_id + 1;
-}
+  } }
 
 void min_tx_start(uint8_t port) {}
 void min_tx_finished(uint8_t port) {}
@@ -36,20 +56,21 @@ uint16_t min_tx_space(uint8_t port)
 {
   return S6C.availableForWrite();
 }
+
 void min_tx_byte(uint8_t port, uint8_t byte)
 {
+  // TODO fixme
   S6C.write(&byte, 1U);
-  Serial.println("Aw hell yeah");
+  Serial.write(&byte, 1U);
 }
 
 const int slaveSelectPin = 10;
 const int enablePin = 9;
 
 
-
-
 void setup()
 {
+  stat = new Squib_StatusType();
 
   for (size_t i = 0; i < 5; i++) {
     pinMode(13, OUTPUT);
@@ -60,7 +81,9 @@ void setup()
   }
 
   Serial.begin(9600);
+  while (!Serial);
   S6C.begin(9600);
+  while (!S6C);
 
   pinMode(slaveSelectPin, OUTPUT);
   pinMode(enablePin, OUTPUT);
@@ -78,14 +101,65 @@ void setup()
 
 void loop()
 {
-  char buf[32];
-  size_t buf_len;
   if (S6C.available() > 0) {
-    buf_len = S6C.readBytes(buf, 32);
-    Serial.println("Read a thing!");
+    buf_len = S6C.readBytes(buf, buf_size);
+  } else {
+    buf_len = 0;
   }
-  else buf_len = 0;
   min_poll(&min_ctx, (uint8_t *)buf, (uint8_t)buf_len);
+
+  if (millis() - last_report > 5000) {
+    // Send FEN data
+    /*
+    Squib_GetStatus(stat);
+
+    const char *latch1 = stat->Squib_StatFen1 == SQB_FEN_LOW ? "LOW" : "HIGH";
+    const char *latch2 = stat->Squib_StatFen2 == SQB_FEN_LOW ? "LOW" : "HIGH";
+    snprintf(buf + header_size, buf_size - header_size, "FEN1: %s/FEN2: %s\n", latch1, latch2);
+
+    buf_len = strlen(buf + header_size) + 1;
+    buf[0] = 0; 
+    buf[1] = buf_len;
+    Serial.println(buf);
+    Serial.println(buf_len);
+    min_send_frame(&min_ctx, cur_min_id++, (uint8_t *)buf, (uint8_t)(buf_len + header_size));
+    */
+
+    buf[0] = 0; 
+    buf[1] = 5;
+    buf[2] = 'H';
+    buf[3] = 'E';
+    buf[4] = 'L';
+    buf[5] = 'L';
+    buf[6] = '\0';
+
+    Serial.println("hello");
+    min_send_frame(&min_ctx, cur_min_id++, (uint8_t *)buf, 7);
+
+
+    /*
+    // Send squib resistances on port 1
+    snprintf(buf + header_size, buf_size, "R1A: %d/R1B: %d", stat->Squib_Stat1AResistance,
+            stat->Squib_Stat1BResistance);
+    buf_len = strlen(buf + header_size) + 1;
+    buf[0] = 0;
+    buf[1] = buf_len + header_size;
+    min_send_frame(&min_ctx, cur_min_id++, (uint8_t *)buf, (uint8_t)buf_len + header_size);
+
+    // Send squib resistances on port 2
+    snprintf(buf + header_size, buf_size, "R2A: %d/R2B: %d", stat->Squib_Stat2AResistance,
+            stat->Squib_Stat2BResistance);
+    buf_len = strlen(buf + header_size) + 1;
+    buf[0] = 0;
+    buf[1] = buf_len + header_size;
+    min_send_frame(&min_ctx, cur_min_id++, (uint8_t *)buf, (uint8_t)buf_len + header_size);
+    */
+
+    // Update report time
+    last_report = millis();
+  }
+
+  delay(10);
 
   /*
   if (millis() % 1000 > 500 && millis() % 1000 < 550) {
@@ -102,18 +176,18 @@ void loop()
     Serial.print("Status: ");
     Serial.println(ret);
     Serial.print("1A Resistance: ");
-    Serial.println(s->Squib_Stat1AResistance, BIN);
+    Serial.println(stat->Squib_Stat1AResistance, BIN);
     Serial.print("1B Resistance: ");
-    Serial.println(s->Squib_Stat1BResistance, BIN);
+    Serial.println(stat->Squib_Stat1BResistance, BIN);
     Serial.print("2A Resistance: ");
-    Serial.println(s->Squib_Stat2AResistance, BIN);
+    Serial.println(stat->Squib_Stat2AResistance, BIN);
     Serial.print("2B Resistance: ");
-    Serial.println(s->Squib_Stat2BResistance, BIN);
+    Serial.println(stat->Squib_Stat2BResistance, BIN);
 
     Serial.print("Enable 1: ");
-    Serial.println(s->Squib_StatFen1);
+    Serial.println(stat->Squib_StatFen1);
     Serial.print("Enable 2: ");
-    Serial.println(s->Squib_StatFen2);
+    Serial.println(stat->Squib_StatFen2);
 
     if (Serial.available())
     {
