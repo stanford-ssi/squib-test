@@ -3,50 +3,8 @@
 #include <SPI.h>
 #include "min.h"
 
-#define S6C Serial1
-
-struct min_context min_ctx;
-uint8_t cur_min_id; 
-
-uint32_t min_time_ms(void)
-{
-  return millis();
-}
-
-void min_application_handler(uint8_t min_id, uint8_t *min_payload,
-    uint8_t len_payload, uint8_t port)
-{
-  Serial.println("Aw hell yeah");
-  Serial.write((char *) min_payload, len_payload);
-  Serial.println(*min_payload);
-  if (((char *)min_payload)[1] == 'X') {
-    Serial.println("BOOM BOOM ACKA-LACKA BOOM BOOM");
-    Squib_Fire(CMD_FIRE_1A);
-  }
-  if (((char *)min_payload)[1] == 'Z') {
-    Serial.println("NO BOOM NO BOOM");
-    Squib_Fire(CMD_FIRE_NO_SQUIBS);
-  }
-  cur_min_id = min_id + 1;
-}
-
-void min_tx_start(uint8_t port) {}
-void min_tx_finished(uint8_t port) {}
-uint16_t min_tx_space(uint8_t port)
-{
-  return S6C.availableForWrite();
-}
-void min_tx_byte(uint8_t port, uint8_t byte)
-{
-  S6C.write(&byte, 1U);
-  Serial.println("Aw hell yeah");
-}
-
 const int slaveSelectPin = 10;
 const int enablePin = 9;
-
-
-
 
 void setup()
 {
@@ -60,7 +18,6 @@ void setup()
   }
 
   Serial.begin(9600);
-  S6C.begin(9600);
 
   pinMode(slaveSelectPin, OUTPUT);
   pinMode(enablePin, OUTPUT);
@@ -73,27 +30,10 @@ void setup()
   Serial.print("Init: ");
   Serial.println(ret);
 
-  min_init_context(&min_ctx, 0);
 }
 
 void loop()
 {
-  char buf[32];
-  size_t buf_len;
-  if (S6C.available() > 0) {
-    buf_len = S6C.readBytes(buf, 32);
-    Serial.println("Read a thing!");
-  }
-  else buf_len = 0;
-  min_poll(&min_ctx, (uint8_t *)buf, (uint8_t)buf_len);
-
-  /*
-  if (millis() % 1000 > 500 && millis() % 1000 < 550) {
-    digitalWrite(13, LOW);
-  }
-  */
-
-/*
   Squib_StatusType *s = new Squib_StatusType();
   while (true)
   {
@@ -130,7 +70,6 @@ void loop()
       Serial.println(ret);
     }
   }
-*/
 }
 
 extern "C"
