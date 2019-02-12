@@ -13,7 +13,7 @@ char buf[buf_size];
 size_t buf_len;
 
 struct min_context min_ctx;
-uint8_t cur_min_id; 
+uint8_t cur_min_id;
 unsigned long last_report = 0;
 Squib_StatusType *stat;
 
@@ -29,7 +29,7 @@ void min_application_handler(uint8_t min_id, uint8_t *min_payload,
   cur_min_id = min_id + 1;
 
   // send acknowledgement message
-  /* 
+  /*
   size_t ack_size = strlen(ack_message);
   char ack_buf[ack_size + 2];
   ack_buf[0] = 0;
@@ -81,7 +81,7 @@ void setup()
   }
 
   Serial.begin(9600);
-  while (!Serial);
+  //while (!Serial);
   S6C.begin(9600);
   while (!S6C);
 
@@ -91,7 +91,7 @@ void setup()
   digitalWrite(enablePin, HIGH);
   SPI.begin();
 
-  delay(1000);
+  delay(5000);
   uint8_t ret = Squib_Init();
   Serial.print("Init: ");
   Serial.println(ret);
@@ -118,14 +118,14 @@ void loop()
     snprintf(buf + header_size, buf_size - header_size, "FEN1: %s/FEN2: %s\n", latch1, latch2);
 
     buf_len = strlen(buf + header_size) + 1;
-    buf[0] = 0; 
+    buf[0] = 0;
     buf[1] = buf_len;
     Serial.println(buf);
     Serial.println(buf_len);
     min_send_frame(&min_ctx, cur_min_id++, (uint8_t *)buf, (uint8_t)(buf_len + header_size));
     */
 
-    buf[0] = 0; 
+    buf[0] = 0;
     buf[1] = 5;
     buf[2] = 'H';
     buf[3] = 'E';
