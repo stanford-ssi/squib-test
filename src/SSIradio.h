@@ -30,12 +30,6 @@ private:
 
   char buf[buf_size];
   size_t buf_len;
-
-  // void RadioOff();
-  // void RadioOn();
-  // void configurePins();
-  // uint8_t lastRssi; //RSSI of last reception
-  // String errorSyndrome;
 };
 
 #endif

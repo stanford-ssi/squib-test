@@ -108,3 +108,23 @@ uint32_t min_time_ms(void)
 {
   return millis();
 }
+
+
+
+    /*
+    // Send squib resistances on port 1
+    snprintf(buf + header_size, buf_size, "R1A: %d/R1B: %d", stat->Squib_Stat1AResistance,
+            stat->Squib_Stat1BResistance);
+    buf_len = strlen(buf + header_size) + 1;
+    buf[0] = 0;
+    buf[1] = buf_len + header_size;
+    min_send_frame(&min_ctx, cur_min_id++, (uint8_t *)buf, (uint8_t)buf_len + header_size);
+
+    // Send squib resistances on port 2
+    snprintf(buf + header_size, buf_size, "R2A: %d/R2B: %d", stat->Squib_Stat2AResistance,
+            stat->Squib_Stat2BResistance);
+    buf_len = strlen(buf + header_size) + 1;
+    buf[0] = 0;
+    buf[1] = buf_len + header_size;
+    min_send_frame(&min_ctx, cur_min_id++, (uint8_t *)buf, (uint8_t)buf_len + header_size);
+    */
