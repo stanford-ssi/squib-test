@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "MC33797.h"
+//#include "MC33797.h"
 #include <SPI.h>
 #include "min.h"
 
@@ -15,7 +15,6 @@ size_t buf_len;
 struct min_context min_ctx;
 uint8_t cur_min_id;
 unsigned long last_report = 0;
-Squib_StatusType *stat;
 
 uint32_t min_time_ms(void)
 {
@@ -43,11 +42,9 @@ void min_application_handler(uint8_t min_id, uint8_t *min_payload,
   Serial.println(*min_payload);
   if (((char *)min_payload)[1] == 'X') {
     Serial.println("BOOM BOOM ACKA-LACKA BOOM BOOM");
-    Squib_Fire(CMD_FIRE_1A);
   }
   if (((char *)min_payload)[1] == 'Z') {
     Serial.println("NO BOOM NO BOOM");
-    Squib_Fire(CMD_FIRE_NO_SQUIBS);
   } }
 
 void min_tx_start(uint8_t port) {}
@@ -64,13 +61,9 @@ void min_tx_byte(uint8_t port, uint8_t byte)
   Serial.write(&byte, 1U);
 }
 
-const int slaveSelectPin = 10;
-const int enablePin = 9;
-
-
 void setup()
 {
-  stat = new Squib_StatusType();
+  //stat = new Squib_StatusType();
 
   for (size_t i = 0; i < 5; i++) {
     pinMode(13, OUTPUT);
@@ -85,16 +78,7 @@ void setup()
   S6C.begin(9600);
   while (!S6C);
 
-  pinMode(slaveSelectPin, OUTPUT);
-  pinMode(enablePin, OUTPUT);
-  digitalWrite(slaveSelectPin, HIGH);
-  digitalWrite(enablePin, HIGH);
-  SPI.begin();
-
   delay(5000);
-  uint8_t ret = Squib_Init();
-  Serial.print("Init: ");
-  Serial.println(ret);
 
   min_init_context(&min_ctx, 0);
 }
@@ -109,21 +93,6 @@ void loop()
   min_poll(&min_ctx, (uint8_t *)buf, (uint8_t)buf_len);
 
   if (millis() - last_report > 5000) {
-    // Send FEN data
-    /*
-    Squib_GetStatus(stat);
-
-    const char *latch1 = stat->Squib_StatFen1 == SQB_FEN_LOW ? "LOW" : "HIGH";
-    const char *latch2 = stat->Squib_StatFen2 == SQB_FEN_LOW ? "LOW" : "HIGH";
-    snprintf(buf + header_size, buf_size - header_size, "FEN1: %s/FEN2: %s\n", latch1, latch2);
-
-    buf_len = strlen(buf + header_size) + 1;
-    buf[0] = 0;
-    buf[1] = buf_len;
-    Serial.println(buf);
-    Serial.println(buf_len);
-    min_send_frame(&min_ctx, cur_min_id++, (uint8_t *)buf, (uint8_t)(buf_len + header_size));
-    */
 
     buf[0] = 0;
     buf[1] = 5;
@@ -207,28 +176,28 @@ void loop()
 */
 }
 
-extern "C"
-{
-  void debug(const char *data)
-  {
-    Serial.println(data);
-  }
-
-  void debug_hex(uint8_t data)
-  {
-    Serial.println(data, HEX);
-  }
-
-  void debug_bin(uint8_t data)
-  {
-    Serial.println(data, BIN);
-  }
-
-  uint8_t send(uint8_t data)
-  {
-    digitalWrite(slaveSelectPin, LOW);
-    uint8_t val = SPI.transfer(data);
-    digitalWrite(slaveSelectPin, HIGH);
-    return val;
-  }
-}
+// extern "C"
+// {
+//   void debug(const char *data)
+//   {
+//     Serial.println(data);
+//   }
+//
+//   void debug_hex(uint8_t data)
+//   {
+//     Serial.println(data, HEX);
+//   }
+//
+//   void debug_bin(uint8_t data)
+//   {
+//     Serial.println(data, BIN);
+//   }
+//
+//   uint8_t send(uint8_t data)
+//   {
+//     digitalWrite(slaveSelectPin, LOW);
+//     uint8_t val = SPI.transfer(data);
+//     digitalWrite(slaveSelectPin, HIGH);
+//     return val;
+//   }
+// }
