@@ -1,14 +1,11 @@
 #include <Arduino.h>
 #include "SSIradio.h"
 
-#define S6C Serial1
+//#define S6C Serial1
 
-const size_t header_size = 2;
-const size_t buf_size = 64;
+SSIradio S6C;
+
 const char *ack_message = "RECEIVED";
-
-char buf[buf_size];
-size_t buf_len;
 
 unsigned long last_report = 0;
 
@@ -18,13 +15,6 @@ unsigned long last_report = 0;
 // {
 //   return S6C.availableForWrite();
 // }
-
-void min_tx_byte(uint8_t port, uint8_t byte)
-{
-  // TODO fixme
-  S6C.write(&byte, 1U);
-  Serial.write(&byte, 1U);
-}
 
 void setup()
 {
@@ -40,34 +30,19 @@ void setup()
 
   Serial.begin(9600);
   //while (!Serial);
-  S6C.begin(9600);
-  while (!S6C);
+  S6C.begin(9600, &Serial1);
+  //while (!S6C);
 
   delay(5000);
 }
 
 void loop()
 {
-  if (S6C.available() > 0) {
-    buf_len = S6C.readBytes(buf, buf_size);
-  } else {
-    buf_len = 0;
-  }
-  min_poll(&min_ctx, (uint8_t *)buf, (uint8_t)buf_len);
+  S6C.rx();
 
   if (millis() - last_report > 5000) {
 
-    buf[0] = 0;
-    buf[1] = 5;
-    buf[2] = 'H';
-    buf[3] = 'E';
-    buf[4] = 'L';
-    buf[5] = 'L';
-    buf[6] = '\0';
-
-    Serial.println("hello");
-    min_send_frame(&min_ctx, cur_min_id++, (uint8_t *)buf, 7);
-
+  S6C.tx();
 
     /*
     // Send squib resistances on port 1
