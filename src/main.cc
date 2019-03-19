@@ -1,7 +1,5 @@
 #include <Arduino.h>
-//#include "MC33797.h"
-#include <SPI.h>
-#include "min.h"
+#include "SSIradio.h"
 
 #define S6C Serial1
 
@@ -12,47 +10,14 @@ const char *ack_message = "RECEIVED";
 char buf[buf_size];
 size_t buf_len;
 
-struct min_context min_ctx;
-uint8_t cur_min_id;
 unsigned long last_report = 0;
 
-uint32_t min_time_ms(void)
-{
-  return millis();
-}
-
-void min_application_handler(uint8_t min_id, uint8_t *min_payload,
-    uint8_t len_payload, uint8_t port)
-{
-  // increment min_id to be sequential
-  cur_min_id = min_id + 1;
-
-  // send acknowledgement message
-  /*
-  size_t ack_size = strlen(ack_message);
-  char ack_buf[ack_size + 2];
-  ack_buf[0] = 0;
-  ack_buf[1] = strlen(ack_message);
-  strncpy(ack_buf + 2, ack_message, ack_size);
-  min_send_frame(&min_ctx, cur_min_id++, (uint8_t *)ack_buf, (uint8_t)ack_size + 2);
-  */
-
-  // Serial.println("Aw hell yeah");
-  Serial.write((char *) min_payload, len_payload);
-  Serial.println(*min_payload);
-  if (((char *)min_payload)[1] == 'X') {
-    Serial.println("BOOM BOOM ACKA-LACKA BOOM BOOM");
-  }
-  if (((char *)min_payload)[1] == 'Z') {
-    Serial.println("NO BOOM NO BOOM");
-  } }
-
-void min_tx_start(uint8_t port) {}
-void min_tx_finished(uint8_t port) {}
-uint16_t min_tx_space(uint8_t port)
-{
-  return S6C.availableForWrite();
-}
+// void min_tx_start(uint8_t port) {}
+// void min_tx_finished(uint8_t port) {}
+// uint16_t min_tx_space(uint8_t port)
+// {
+//   return S6C.availableForWrite();
+// }
 
 void min_tx_byte(uint8_t port, uint8_t byte)
 {
@@ -79,8 +44,6 @@ void setup()
   while (!S6C);
 
   delay(5000);
-
-  min_init_context(&min_ctx, 0);
 }
 
 void loop()
