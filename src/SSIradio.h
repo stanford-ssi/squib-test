@@ -25,7 +25,8 @@ public:
   void set_min_id(uint8_t new_min_id);
   uint8_t rx();
   void tx(const char* buffer_in);
-  void tx_special(const char* buffer_in, char msgtype);
+  void tx(const char* buffer_in, size_t length);
+  void tx(char msgtype, const char* buffer_in, size_t length);
 
 private:
   struct min_context min_ctx;

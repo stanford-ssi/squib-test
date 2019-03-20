@@ -1,6 +1,5 @@
 #include "SSIradio.h"
 
-
 uint8_t num_radios_initialized = 0;
 SSIradio* radios[NUM_RADIOS];
 
@@ -43,18 +42,24 @@ uint8_t SSIradio::rx(){
 }
 
 //tx
-//assumes message type SEND_MESSAGE
+//assumes message type SEND_MESSAGE, properly formed string input
 void SSIradio::tx(const char* buffer_in){
-  tx_special(buffer_in, MESSAGE_SEND);
+  tx(MESSAGE_SEND, buffer_in, strlen(buffer_in));
 }
 
-//tx_special
+//tx
+//assumes message type SEND_MESSAGE, arbitrary input with specified length
+void SSIradio::tx(const char* buffer_in, size_t length){
+  tx(MESSAGE_SEND, buffer_in, length);
+}
+
+//tx
 //generalized transmit function, allows you to set message message type
 //transmits message, subject to buffer limits
 //invoked by tx()
-void SSIradio::tx_special(const char* buffer_in, char msgtype){
+void SSIradio::tx(char msgtype, const char* buffer_in, size_t length){
 
-  size_t cpylen = min(strlen(buffer_in), MAX_PAYLOAD_SIZE);
+  size_t cpylen = min(length, MAX_PAYLOAD_SIZE);
 
   for(uint8_t i = 0; i < cpylen; i++){
     buf[i+2] = buffer_in[i];
@@ -80,6 +85,11 @@ void SSIradio::tx_special(const char* buffer_in, char msgtype){
 void min_application_handler(uint8_t min_id, uint8_t *min_payload,
     uint8_t len_payload, uint8_t port)
 {
+
+  if (len_payload == 0) {
+			return;
+	}
+
   // increment min_id to be sequential
   radios[port]->set_min_id(min_id + 1);
 
