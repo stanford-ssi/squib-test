@@ -1,5 +1,6 @@
 #include "SSIradio.h"
 
+
 uint8_t num_radios_initialized = 0;
 SSIradio* radios[NUM_RADIOS];
 
@@ -28,7 +29,7 @@ void SSIradio::set_min_id(uint8_t new_min_id){
 }
 
 //rx
-//
+//checks for incoming bytes and processes them if available
 uint8_t SSIradio::rx(){
 
   if (serial_port->available() > 0) {
@@ -41,18 +42,38 @@ uint8_t SSIradio::rx(){
   return buf_len;
 }
 
-void SSIradio::tx(){
-
-      buf[0] = 0;
-      buf[1] = 5;
-      buf[2] = 'H';
-      buf[3] = 'E';
-      buf[4] = 'L';
-      buf[5] = 'L';
-      buf[6] = '\0';
-
-      min_send_frame(&min_ctx, cur_min_id++, (uint8_t *)buf, 7);
+//tx
+//assumes message type SEND_MESSAGE
+void SSIradio::tx(const char* buffer_in){
+  tx_special(buffer_in, MESSAGE_SEND);
 }
+
+//tx_special
+//generalized transmit function, allows you to set message message type
+//transmits message, subject to buffer limits
+//invoked by tx()
+void SSIradio::tx_special(const char* buffer_in, char msgtype){
+
+  size_t cpylen = min(strlen(buffer_in), MAX_PAYLOAD_SIZE);
+
+  for(uint8_t i = 0; i < cpylen; i++){
+    buf[i+2] = buffer_in[i];
+  }
+
+  buf[0] = msgtype; // first char is message type
+  buf[1] = cpylen + 1; // length of payload, including null terminator
+  buf[cpylen + 2] = '\0'; // place null terminator at end of string
+
+  min_send_frame(&min_ctx, cur_min_id++, (uint8_t *)buf, cpylen + 3); // +3 for msgtype, length, and terminator characters
+}
+
+// buf[0] = 0;
+// buf[1] = 5;
+// buf[2] = 'H';
+// buf[3] = 'E';
+// buf[4] = 'L';
+// buf[5] = 'L';
+// buf[6] = '\0';
 
 // legitimate min functions
 

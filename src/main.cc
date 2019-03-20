@@ -28,11 +28,11 @@ void setup()
 
 void loop()
 {
-  //S6C.rx();
+  S6C.rx();
 
   if (millis() - last_report > 5000) {
 
-  //S6C.tx();
+  S6C.tx("potato");
 
     // Update report time
     last_report = millis();

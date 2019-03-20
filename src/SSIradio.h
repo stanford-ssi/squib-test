@@ -7,9 +7,11 @@
 
 #include <Arduino.h>
 #include "min.h"
+#include "RadioInterface.h"
 
 const size_t header_size = 2;
 const size_t buf_size = 64;
+const size_t MAX_PAYLOAD_SIZE = buf_size - 3;
 
 class SSIradio
 {
@@ -22,7 +24,8 @@ public:
   void begin(uint16_t baud, HardwareSerial *serial);
   void set_min_id(uint8_t new_min_id);
   uint8_t rx();
-  void tx();
+  void tx(const char* buffer_in);
+  void tx_special(const char* buffer_in, char msgtype);
 
 private:
   struct min_context min_ctx;
