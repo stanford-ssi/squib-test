@@ -72,6 +72,10 @@ void SSIradio::tx(char msgtype, const char* buffer_in, size_t length){
   min_send_frame(&min_ctx, cur_min_id++, (uint8_t *)buf, cpylen + 3); // +3 for msgtype, length, and terminator characters
 }
 
+void SSIradio::set_callback(std::function<void(char*)> callback_fn){
+  callback = callback_fn;
+}
+
 // buf[0] = 0;
 // buf[1] = 5;
 // buf[2] = 'H';
@@ -92,6 +96,11 @@ void min_application_handler(uint8_t min_id, uint8_t *min_payload,
 
   // increment min_id to be sequential
   radios[port]->set_min_id(min_id + 1);
+
+  // run callback function if set
+  if(radios[port]->callback){
+    radios[port]->callback((char *) min_payload);
+  }
 
   // send acknowledgement message
   /*
