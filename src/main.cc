@@ -13,7 +13,7 @@
 const uint8_t LEDS[] = {LED1, LED2, LED3, LED4, LED5, LED6};
 
 // Squib firing definitions
-#define SQUIB_A_TESTLO  2 // PA08
+#define SQUIB_A_TESTLO  4 // PA08
 #define SQUIB_A_CONTLO A3 // PA04
 #define SQUIB_A_TESTHI  3 // PA09
 #define SQUIB_A_CONTHI A4 // PA05
@@ -22,7 +22,7 @@ const uint8_t LEDS[] = {LED1, LED2, LED3, LED4, LED5, LED6};
 
 #define SQUIB_B_TESTLO A0 // PA02
 #define SQUIB_B_CONTLO A1 // PB08
-#define SQUIB_B_TESTHI 15 // PA03
+#define SQUIB_B_TESTHI 25 // PA03
 #define SQUIB_B_CONTHI A2 // PB09
 #define SQUIB_B_FIREHI  9 // PA07
 #define SQUIB_B_FIRELO  8 // PA06
