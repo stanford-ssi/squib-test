@@ -1,6 +1,6 @@
 #include <Arduino.h>
-#include "SSIradio.h"
-
+//#include "SSIradio.h"
+#include "squib.h"
 
 // LED pin definitions - numbered left to right, with text upright
 #define LED1  5 // PA15
@@ -27,7 +27,7 @@ const uint8_t LEDS[] = {LED1, LED2, LED3, LED4, LED5, LED6};
 #define SQUIB_B_FIREHI  9 // PA07
 #define SQUIB_B_FIRELO  8 // PA06
 
-SSIradio S6C;
+//SSIradio S6C;
 
 const char *ack_message = "RECEIVED";
 
@@ -45,7 +45,7 @@ void setup()
     delay(100);
   }
 
-  Serial.begin(9600);
+  //Serial.begin(9600);
   //while (!Serial);
   //S6C.begin(9600, &Serial1);
   //while (!S6C);
