@@ -9,7 +9,7 @@ ARMED,
 FIRE_COUNTDOWN,
 FIRING,
 POST_FIRE,
-CONT_FAIL
+FIRE_ABORT
 } fireState;
 
 class Squib
@@ -22,9 +22,15 @@ public:
   int test();
   void disarm();
   void arm();
-  void fire();
+  void fire(unsigned long countdown); // milliseconds!!!
+  unsigned long updateCountdown();
   fireState getState();
+
+  uint16_t fireTime = 1000; // milliseconds!!! 
 private:
+
+  void ignite();
+  void sayPrayer();
 
   uint8_t PIN_FIREHI;
   uint8_t PIN_FIRELO;
@@ -34,6 +40,8 @@ private:
   uint8_t PIN_CONTLO;
 
   fireState SQUIB_STATE = DISARMED;
+  unsigned long COUNTDOWN;
+  unsigned long COUNTDOWN_START;
 
 };
 

@@ -32,7 +32,16 @@ fireState Squib::getState(){
 }
 
 int Squib::test(){
-  return 0;
+  digitalWrite(PIN_TESTHI, HIGH);
+  digitalWrite(PIN_TESTLO, HIGH);
+
+  uint16_t contHi = analogRead(PIN_CONTHI);
+  uint16_t contLo = analogRead(PIN_CONTLO);
+
+  digitalWrite(PIN_TESTHI, LOW);
+  digitalWrite(PIN_TESTLO, LOW);
+
+  return contHi - contLo;
 }
 
 void Squib::arm(){
@@ -40,9 +49,49 @@ void Squib::arm(){
 }
 
 void Squib::disarm(){
-
+  SQUIB_STATE = DISARMED;
 }
 
-void Squib::fire(){
+void Squib::fire(unsigned long countdown = 10000){ // MILLISECONDS!!! (defaults to 10000)
 
+  if(countdown >= 10000){ // ignore firing with countdowns of less than ten seconds, to give some recovery time for safety
+    if(SQUIB_STATE == ARMED){
+      SQUIB_STATE = FIRE_COUNTDOWN;
+      COUNTDOWN = countdown;
+      COUNTDOWN_START = millis();
+    }
+  }
+}
+
+unsigned long Squib::updateCountdown(){
+  if(millis() < COUNTDOWN_START){ // if there's been a rollover, or other error
+    SQUIB_STATE = FIRE_ABORT;
+    return -1;
+  }
+
+  long countdown_remaining = COUNTDOWN - (millis() - COUNTDOWN_START); // remaining time, in milliseconds
+  if(countdown_remaining < 0){
+    SQUIB_STATE = FIRING;
+    ignite();
+  }
+
+  return countdown_remaining;
+}
+
+void Squib::ignite(){
+  sayPrayer();
+  digitalWrite(PIN_FIREHI, HIGH);
+  digitalWrite(PIN_FIRELO, HIGH);
+
+  delay(fireTime);
+
+  digitalWrite(PIN_FIREHI, LOW);
+  digitalWrite(PIN_FIRELO, LOW);
+
+  SQUIB_STATE = POST_FIRE;
+}
+
+void sayPrayer(){
+  SerialUSB.println("1 Corinthians 3:13");
+  SerialUSB.println("their work will be shown for what it is, because the Day will bring it to light. It will be revealed with fire, and the fire will test the quality of each person’s work.");
 }
