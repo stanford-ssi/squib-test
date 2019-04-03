@@ -33,14 +33,20 @@ const char *ack_message = "RECEIVED";
 
 unsigned long last_report = 0;
 
+Squib SQUIB_A = Squib(SQUIB_A_FIREHI, SQUIB_A_FIRELO, SQUIB_A_TESTHI, SQUIB_A_TESTLO, SQUIB_A_CONTHI, SQUIB_A_CONTLO);
+Squib SQUIB_B = Squib(SQUIB_B_FIREHI, SQUIB_B_FIRELO, SQUIB_B_TESTHI, SQUIB_B_TESTLO, SQUIB_B_CONTHI, SQUIB_B_CONTLO);
+
 void setup()
 {
+  SQUIB_A.init();
+  SQUIB_A.init();
+
   for (uint8_t i = 0; i < 6; i++) {
     pinMode(LEDS[i], OUTPUT);
     digitalWrite(LEDS[i], HIGH);
-    delay(100);
+    delay(50);
     digitalWrite(LEDS[i], LOW);
-    delay(100);
+    delay(50);
   }
 
   //Serial.begin(9600);
