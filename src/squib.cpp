@@ -91,7 +91,7 @@ void Squib::ignite(){
   SQUIB_STATE = POST_FIRE;
 }
 
-void sayPrayer(){
+void Squib::sayPrayer(){
   SerialUSB.println("1 Corinthians 3:13");
   SerialUSB.println("their work will be shown for what it is, because the Day will bring it to light. It will be revealed with fire, and the fire will test the quality of each person’s work.");
 }

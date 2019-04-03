@@ -88,12 +88,22 @@ void loop()
 }
 
 void displayState(Squib& sq){
+
+  sq.updateCountdown();
+
   switch(sq.getState()){
     case DISARMED:
       writeLEDs(LED_CHANNEL_GROUPS[sq.channel], LOW);
       break;
     case ARMED:
-      if(blinkPeriods & 0b1){
+      if(blinkPeriods & 0b10){
+        writeLEDs(LED_CHANNEL_GROUPS[sq.channel], HIGH);
+      }else{
+        writeLEDs(LED_CHANNEL_GROUPS[sq.channel], LOW);
+      }
+      break;
+    case FIRE_COUNTDOWN:
+      if(blinkPeriods & 0b1){ // blink faster
         writeLEDs(LED_CHANNEL_GROUPS[sq.channel], HIGH);
       }else{
         writeLEDs(LED_CHANNEL_GROUPS[sq.channel], LOW);
