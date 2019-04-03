@@ -4,11 +4,11 @@
 
 // LED pin definitions - numbered left to right, with text upright
 #define LED1  5 // PA15
-#define LED2  4 // PA14
-#define LED3 43 // PA13
-#define LED4 18 // PA12
-#define LED5 20 // PB11
-#define LED6 21 // PB10
+#define LED2  2 // PA14
+#define LED3 38 // PA13
+#define LED4 22 // PA12
+#define LED5 24 // PB11
+#define LED6 23 // PB10
 
 const uint8_t LEDS[] = {LED1, LED2, LED3, LED4, LED5, LED6};
 
@@ -35,9 +35,7 @@ unsigned long last_report = 0;
 
 void setup()
 {
-
-
-  for (size_t i = 0; i < 6; i++) {
+  for (uint8_t i = 0; i < 6; i++) {
     pinMode(LEDS[i], OUTPUT);
     digitalWrite(LEDS[i], HIGH);
     delay(100);
