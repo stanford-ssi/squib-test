@@ -1,14 +1,14 @@
 #include "squib.h"
 
-Squib::Squib(uint8_t FIREHI, uint8_t FIRELO, uint8_t TESTHI, uint8_t TESTLO, uint8_t CONTHI, uint8_t CONTLO, uint8_t channelNumber){
-  PIN_FIREHI = FIREHI;
-  PIN_FIRELO = FIRELO;
-  PIN_TESTHI = TESTHI;
-  PIN_TESTLO = TESTLO;
-  PIN_CONTHI = CONTHI;
-  PIN_CONTLO = CONTLO;
-  channel = channelNumber;
-}
+// Squib::Squib(uint8_t FIREHI, uint8_t FIRELO, uint8_t TESTHI, uint8_t TESTLO, uint8_t CONTHI, uint8_t CONTLO, uint8_t channelNumber){
+//   PIN_FIREHI = FIREHI;
+//   PIN_FIRELO = FIRELO;
+//   PIN_TESTHI = TESTHI;
+//   PIN_TESTLO = TESTLO;
+//   PIN_CONTHI = CONTHI;
+//   PIN_CONTLO = CONTLO;
+//   channel = channelNumber;
+// }
 
 // safely initialize squib
 
@@ -52,27 +52,31 @@ void Squib::disarm(){
   SQUIB_STATE = DISARMED;
 }
 
-void Squib::fire(unsigned long countdown){ // MILLISECONDS!!! (defaults to 10000)
+void Squib::fire(unsigned long countdown, uint16_t fireTime){ // MILLISECONDS!!!
 
   if(countdown >= 10000){ // ignore firing with countdowns of less than ten seconds, to give some recovery time for safety
-    if(SQUIB_STATE == ARMED){
-      SQUIB_STATE = FIRE_COUNTDOWN;
-      COUNTDOWN = countdown;
-      COUNTDOWN_START = millis();
-    }
+    SQUIB_STATE = FIRE_ABORT;
+    return;
+  }
+
+  if(SQUIB_STATE == ARMED){
+    SQUIB_STATE = FIRE_COUNTDOWN;
+    COUNTDOWN = countdown;
+    COUNTDOWN_START = millis();
+    this->fireTime = fireTime;
   }
 }
 
 unsigned long Squib::updateCountdown(){
-  if (SQUIB_STATE != FIRE_COUNTDOWN) return 0;
-  
+  if (SQUIB_STATE != FIRE_COUNTDOWN) return -1;
+
   if(millis() < COUNTDOWN_START){ // if there's been a rollover, or other error
     SQUIB_STATE = FIRE_ABORT;
     return -1;
   }
 
   long countdown_remaining = COUNTDOWN - (millis() - COUNTDOWN_START); // remaining time, in milliseconds
-  if(countdown_remaining < 0){
+  if(countdown_remaining <= 0){
     SQUIB_STATE = FIRING;
     ignite();
   }
@@ -81,14 +85,14 @@ unsigned long Squib::updateCountdown(){
 }
 
 void Squib::ignite(){
-  sayPrayer();
+  //sayPrayer();
   digitalWrite(PIN_FIREHI, HIGH);
   digitalWrite(PIN_FIRELO, HIGH);
 
-  //delay(fireTime);
+  delay(fireTime);
 
-  //digitalWrite(PIN_FIREHI, LOW);
-  //digitalWrite(PIN_FIRELO, LOW);
+  digitalWrite(PIN_FIREHI, LOW);
+  digitalWrite(PIN_FIRELO, LOW);
 
   SQUIB_STATE = POST_FIRE;
 }

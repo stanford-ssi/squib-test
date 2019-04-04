@@ -9,7 +9,7 @@ SSIradio::SSIradio(){}
 
 //begin
 //actually initializes a new radio on the specified serial port with the specified baud rate
-void SSIradio::begin(uint16_t baud, HardwareSerial *serial){
+void SSIradio::begin(unsigned long baud, HardwareSerial *serial){
   serial_port = serial;
   serial_port->begin(baud);
 

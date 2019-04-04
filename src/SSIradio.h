@@ -26,7 +26,7 @@ public:
   size_t buf_len;
 
   SSIradio();
-  void begin(uint16_t baud, HardwareSerial *serial);
+  void begin(unsigned long baud, HardwareSerial *serial);
   void set_min_id(uint8_t new_min_id);
   uint8_t rx();
   void tx(const char* buffer_in);
@@ -35,7 +35,7 @@ public:
   void set_callback(CallbackType callback_fn);
 
   operator bool() const;
-  
+
 private:
   struct min_context min_ctx;
   uint8_t cur_min_id;
