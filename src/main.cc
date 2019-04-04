@@ -1,5 +1,6 @@
 #include <Arduino.h>
-//#include "SSIradio.h"
+#include <wiring_private.h>
+#include "SSIradio.h"
 #include "squib.h"
 
 void displayState(Squib& sq);
@@ -12,6 +13,9 @@ void writeLEDs(uint8_t bitmask, uint8_t state);
 #define LED4 22 // PA12
 #define LED5 24 // PB11
 #define LED6 23 // PB10
+
+#define SRAD_TX 11
+#define SRAD_RX 10
 
 const uint8_t NUM_LEDS = 6;
 const uint8_t LEDS[] = {LED1, LED2, LED3, LED4, LED5, LED6};
@@ -35,7 +39,14 @@ unsigned long lastBlink = 0;
 #define SQUIB_B_FIREHI  9 // PA07
 #define SQUIB_B_FIRELO  8 // PA06
 
-//SSIradio S6C;
+Uart SerialS6C(&sercom1, SRAD_RX, SRAD_TX, SERCOM_RX_PAD_2, UART_TX_PAD_0);
+
+void SERCOM1_Handler()
+{
+  SerialS6C.IrqHandler();
+}
+
+SSIradio S6C;
 
 const char *ack_message = "RECEIVED";
 
@@ -43,6 +54,11 @@ unsigned long last_report = 0;
 
 Squib SQUIB_A = Squib(SQUIB_A_FIREHI, SQUIB_A_FIRELO, SQUIB_A_TESTHI, SQUIB_A_TESTLO, SQUIB_A_CONTHI, SQUIB_A_CONTLO, 0);
 Squib SQUIB_B = Squib(SQUIB_B_FIREHI, SQUIB_B_FIRELO, SQUIB_B_TESTHI, SQUIB_B_TESTLO, SQUIB_B_CONTHI, SQUIB_B_CONTLO, 1);
+
+void receiveMsg(char* msg) {
+  SerialUSB.println("RECEIVED MESSAGE:");
+  SerialUSB.println(msg);
+}
 
 void setup()
 {
@@ -57,29 +73,38 @@ void setup()
     delay(50);
   }
 
-  SerialUSB.begin(9600);
-  //while (!Serial);
-  //S6C.begin(9600, &Serial1);
-  //while (!S6C);
+  //SQUIB_A.arm();
+  //SQUIB_A.fire();
 
-  delay(5000);
+  SerialUSB.begin(9600);
+  while (!Serial);
+
+  S6C.set_callback(receiveMsg);
+  S6C.begin(115200, &SerialS6C);
+  while (!S6C);
+
+  //delay(5000);
 }
 
 void loop()
 {
+
+  static bool led_state = false;
+  
   if(millis() - lastBlink > BLINK_INTERVAL){
     lastBlink = millis();
     blinkPeriods++;
+    //writeLEDs(0b1, led_state);
+    led_state = !led_state;
+    SerialUSB.println("Test");
   }
 
+  S6C.rx();
   displayState(SQUIB_A);
   displayState(SQUIB_B);
-  //S6C.rx();
 
   if (millis() - last_report > 5000) {
-
-  //S6C.tx("potato");
-
+    S6C.tx("potato");
     // Update report time
     last_report = millis();
   }

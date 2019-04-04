@@ -52,7 +52,7 @@ void Squib::disarm(){
   SQUIB_STATE = DISARMED;
 }
 
-void Squib::fire(unsigned long countdown = 10000){ // MILLISECONDS!!! (defaults to 10000)
+void Squib::fire(unsigned long countdown){ // MILLISECONDS!!! (defaults to 10000)
 
   if(countdown >= 10000){ // ignore firing with countdowns of less than ten seconds, to give some recovery time for safety
     if(SQUIB_STATE == ARMED){
@@ -64,6 +64,8 @@ void Squib::fire(unsigned long countdown = 10000){ // MILLISECONDS!!! (defaults 
 }
 
 unsigned long Squib::updateCountdown(){
+  if (SQUIB_STATE != FIRE_COUNTDOWN) return 0;
+  
   if(millis() < COUNTDOWN_START){ // if there's been a rollover, or other error
     SQUIB_STATE = FIRE_ABORT;
     return -1;
@@ -83,10 +85,10 @@ void Squib::ignite(){
   digitalWrite(PIN_FIREHI, HIGH);
   digitalWrite(PIN_FIRELO, HIGH);
 
-  delay(fireTime);
+  //delay(fireTime);
 
-  digitalWrite(PIN_FIREHI, LOW);
-  digitalWrite(PIN_FIRELO, LOW);
+  //digitalWrite(PIN_FIREHI, LOW);
+  //digitalWrite(PIN_FIRELO, LOW);
 
   SQUIB_STATE = POST_FIRE;
 }

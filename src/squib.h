@@ -22,7 +22,7 @@ public:
   int test();
   void disarm();
   void arm();
-  void fire(unsigned long countdown); // milliseconds!!!
+  void fire(unsigned long countdown = 10000); // milliseconds!!!
   unsigned long updateCountdown();
   fireState getState();
 
