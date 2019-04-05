@@ -109,7 +109,7 @@ void loop()
   displayState(SQUIB_A);
   displayState(SQUIB_B);
 
-  if (millis() - last_report > 10000) {
+  if (millis() - last_report > 3000) {
     contTest(SQUIB_A);
     //SerialUSB.println("potato");
     // Update report time

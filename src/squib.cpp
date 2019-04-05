@@ -35,8 +35,10 @@ double Squib::test(){
   digitalWrite(PIN_TESTHI, HIGH);
   digitalWrite(PIN_TESTLO, HIGH);
 
-  unsigned int contHi = analogRead(PIN_CONTHI); // guards against a zero
+  unsigned int contHi = analogRead(PIN_CONTHI);
   unsigned int contLo = analogRead(PIN_CONTLO);
+
+  delay(50);
 
   digitalWrite(PIN_TESTHI, LOW);
   digitalWrite(PIN_TESTLO, LOW);
@@ -52,12 +54,15 @@ double Squib::test(){
   // 800 * VsquibHi / VsquibLo = 800 - Rsquib
   // Rsquib = 800 * ((VsquibHi / VsquibLo) - 1) = 800 * (contHi - contLo)/contLo
 
-  if(contLo < LO_SHORT_THRESHOLD) return LOW_SIDE_FAULT;
-  if(contHi > HI_SHORT_THRESHOLD) return HIGH_SIDE_FAULT;
+  //SerialUSB.println(contLo);
+  //SerialUSB.println(contHi);
+
+  //if(contLo < LO_SHORT_THRESHOLD) return LOW_SIDE_FAULT;
+  //if(contHi > HI_SHORT_THRESHOLD) return HIGH_SIDE_FAULT;
 
   double res = (800.0 * (contHi - contLo)) / contLo;
 
-  return res;
+  return (double) contLo;
 }
 
 void Squib::arm(){
