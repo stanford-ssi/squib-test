@@ -14,12 +14,12 @@ void writeLEDs(uint8_t bitmask, uint8_t state);
 #define LED5 24 // PB11
 #define LED6 23 // PB10
 
-#define SRAD_TX 11
-#define SRAD_RX 10
+#define SRAD_TX 35
+#define SRAD_RX 36
 
 const uint8_t NUM_LEDS = 6;
 const uint8_t LEDS[] = {LED1, LED2, LED3, LED4, LED5, LED6};
-const uint8_t LED_CHANNEL_GROUPS[] = {0b111000, 0b000111};
+const uint8_t LED_CHANNEL_GROUPS[] = {0b000111, 0b111000};
 #define BLINK_INTERVAL 100 // milliseconds
 unsigned long blinkPeriods = 0;
 unsigned long lastBlink = 0;
@@ -56,8 +56,12 @@ Squib SQUIB_A = Squib(SQUIB_A_FIREHI, SQUIB_A_FIRELO, SQUIB_A_TESTHI, SQUIB_A_TE
 Squib SQUIB_B = Squib(SQUIB_B_FIREHI, SQUIB_B_FIRELO, SQUIB_B_TESTHI, SQUIB_B_TESTLO, SQUIB_B_CONTHI, SQUIB_B_CONTLO, 1);
 
 void receiveMsg(char* msg) {
-  SerialUSB.println("RECEIVED MESSAGE:");
   SerialUSB.println(msg);
+  if (msg[1] == 'a') {
+    SQUIB_A.arm();
+  } else if (msg[1] == 'f') {
+    SQUIB_A.fire();
+  }
 }
 
 void setup()
@@ -80,7 +84,7 @@ void setup()
   while (!Serial);
 
   S6C.set_callback(receiveMsg);
-  S6C.begin(115200, &SerialS6C);
+  S6C.begin(9600, &SerialS6C);
   while (!S6C);
 
   //delay(5000);
@@ -96,15 +100,15 @@ void loop()
     blinkPeriods++;
     //writeLEDs(0b1, led_state);
     led_state = !led_state;
-    SerialUSB.println("Test");
   }
 
   S6C.rx();
   displayState(SQUIB_A);
   displayState(SQUIB_B);
 
-  if (millis() - last_report > 5000) {
-    S6C.tx("potato");
+  if (millis() - last_report > 2000) {
+    //S6C.tx("potato");
+    //SerialUSB.println("potato");
     // Update report time
     last_report = millis();
   }
