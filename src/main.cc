@@ -5,6 +5,7 @@
 
 void displayState(Squib& sq);
 void writeLEDs(uint8_t bitmask, uint8_t state);
+void contTest(Squib sq);
 
 // LED pin definitions - numbered left to right, with text upright
 #define LED1  5 // PA15
@@ -62,7 +63,7 @@ void receiveMsg(char* msg) {
   } else if (msg[1] == 'f') {
     SQUIB_A.fire();
   } else if (msg[1] == 't') {
-    float res = SQUIB_A.test();
+    contTest(SQUIB_A);
   }
 }
 
@@ -83,7 +84,7 @@ void setup()
   //SQUIB_A.fire();
 
   SerialUSB.begin(9600);
-  while (!Serial);
+  //while (!SerialUSB);
 
   S6C.set_callback(receiveMsg);
   S6C.begin(9600, &SerialS6C);
@@ -108,8 +109,8 @@ void loop()
   displayState(SQUIB_A);
   displayState(SQUIB_B);
 
-  if (millis() - last_report > 2000) {
-    //S6C.tx("potato");
+  if (millis() - last_report > 10000) {
+    contTest(SQUIB_A);
     //SerialUSB.println("potato");
     // Update report time
     last_report = millis();
@@ -151,6 +152,14 @@ void writeLEDs(uint8_t bitmask, uint8_t state){
     if(bitmarker & bitmask) digitalWrite(LEDS[i], state);
     bitmarker = bitmarker << 1;
   }
+}
+
+void contTest(Squib sq){
+  float res = sq.test();
+  char out[16];
+  snprintf(out, 16, "%f", res);
+  S6C.tx(out);
+  SerialUSB.println(out);
 }
 
 // extern "C"
