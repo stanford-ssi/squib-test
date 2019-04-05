@@ -31,17 +31,33 @@ fireState Squib::getState(){
   return SQUIB_STATE;
 }
 
-int Squib::test(){
+double Squib::test(){
   digitalWrite(PIN_TESTHI, HIGH);
   digitalWrite(PIN_TESTLO, HIGH);
 
-  uint16_t contHi = analogRead(PIN_CONTHI);
-  uint16_t contLo = analogRead(PIN_CONTLO);
+  unsigned int contHi = analogRead(PIN_CONTHI); // guards against a zero
+  unsigned int contLo = analogRead(PIN_CONTLO);
 
   digitalWrite(PIN_TESTHI, LOW);
   digitalWrite(PIN_TESTLO, LOW);
 
-  return contHi - contLo;
+  // Rlower = 800 + Rsquib
+  // VsquibHi = Vcc * ((Rlower || 4k)/(1k + (Rlower || 4k)))
+  // contHi = VsquibHi * 0.25 * 1024/3.3     // ADC units
+  // VsquibLo = VsquibHi * 800/Rlower
+  // contLo = VsquibLo * 0.25 * 1024/3.3     // ADC units
+
+  // VsquibHi - VsquibLo = VsquibHi*(1 - (800/Rlower))
+  // (VsquibLo/VsquibHi) = (800/RLower) = 800/(800 - Rsquib)
+  // 800 * VsquibHi / VsquibLo = 800 - Rsquib
+  // Rsquib = 800 * ((VsquibHi / VsquibLo) - 1) = 800 * (contHi - contLo)/contLo
+
+  if(contLo < LO_SHORT_THRESHOLD) return LOW_SIDE_FAULT;
+  if(contHi > HI_SHORT_THRESHOLD) return HIGH_SIDE_FAULT;
+
+  double res = (800.0 * (contHi - contLo)) / contLo;
+
+  return res;
 }
 
 void Squib::arm(){

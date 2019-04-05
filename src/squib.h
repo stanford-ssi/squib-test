@@ -3,6 +3,12 @@
 
 #include <Arduino.h>
 
+#define HI_SHORT_THRESHOLD 900
+#define LO_SHORT_THRESHOLD 100
+
+#define HIGH_SIDE_FAULT -1000
+#define LOW_SIDE_FAULT -2000
+
 typedef enum {
 DISARMED,
 ARMED,
@@ -26,7 +32,7 @@ public:
     PIN_CONTHI(CONTHI),
     PIN_CONTLO(CONTLO){};
   void init();
-  int test();
+  double test();
   void disarm();
   void arm();
   void fire(unsigned long countdown = 10000, uint16_t fireTime = 1000); // milliseconds!!!

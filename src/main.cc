@@ -61,6 +61,8 @@ void receiveMsg(char* msg) {
     SQUIB_A.arm();
   } else if (msg[1] == 'f') {
     SQUIB_A.fire();
+  } else if (msg[1] == 't') {
+    float res = SQUIB_A.test();
   }
 }
 
@@ -94,7 +96,7 @@ void loop()
 {
 
   static bool led_state = false;
-  
+
   if(millis() - lastBlink > BLINK_INTERVAL){
     lastBlink = millis();
     blinkPeriods++;
