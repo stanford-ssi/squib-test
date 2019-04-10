@@ -49,7 +49,7 @@ void SERCOM1_Handler()
 
 SSIradio S6C;
 
-const char *ack_message = "RECEIVED";
+//const char *ack_message = "RECEIVED";
 
 unsigned long last_report = 0;
 
@@ -60,8 +60,15 @@ void receiveMsg(char* msg) {
   SerialUSB.println(msg);
   if (msg[1] == 'a') {
     SQUIB_A.arm();
+
   } else if (msg[1] == 'f') {
     SQUIB_A.fire();
+    S6C.tx("Firing in 10 seconds");
+
+  } else if (msg[1] == 'd') {
+    SQUIB_A.disarm();
+    S6C.tx("DISARMED");
+
   } else if (msg[1] == 't') {
     contTest(SQUIB_A);
   }
@@ -121,7 +128,7 @@ void loop()
 
 void displayState(Squib& sq){
 
-  sq.updateCountdown();
+  long cnt = sq.updateCountdown();
 
   switch(sq.getState()){
     case DISARMED:
@@ -140,6 +147,7 @@ void displayState(Squib& sq){
       }else{
         writeLEDs(LED_CHANNEL_GROUPS[sq.channel], LOW);
       }
+
       break;
     default:
       break;
