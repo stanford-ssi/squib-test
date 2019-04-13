@@ -75,7 +75,7 @@ void Squib::disarm(){
 
 void Squib::fire(unsigned long countdown, uint16_t fireTime){ // MILLISECONDS!!!
 
-  if(countdown >= 10000){ // ignore firing with countdowns of less than ten seconds, to give some recovery time for safety
+  if(countdown < 10000){ // ignore firing with countdowns of less than ten seconds, to give some recovery time for safety
     SQUIB_STATE = FIRE_ABORT;
     return;
   }

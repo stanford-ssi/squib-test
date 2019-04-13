@@ -35,7 +35,7 @@ public:
   double test();
   void disarm();
   void arm();
-  void fire(unsigned long countdown = 10000, uint16_t fireTime = 1000); // milliseconds!!!
+  void fire(unsigned long countdown = 20000, uint16_t fireTime = 1000); // milliseconds!!!
   unsigned long updateCountdown();
   fireState getState();
 
