@@ -47,6 +47,10 @@ const char kArmQuery[] = "arm";
 const char kDisarmQuery[] = "disarm";
 const char kFireQuery[] = "fire";
 
+bool heating = true;
+const int HEAT_PWM_MUL = 3;
+int heat_pwm = 0;
+
 Uart SerialS6C(&sercom1, SRAD_RX, SRAD_TX, SERCOM_RX_PAD_2, UART_TX_PAD_0);
 
 void SERCOM1_Handler()
@@ -98,18 +102,18 @@ void receiveMsg(char* msg) {
     S6C.tx("DISARMED");
     barLEDs(0);
   } else if (!strncmp(msg+1, kHeatQuery, strlen(kHeatQuery))) {
-    SQUIB_B.setHigh();
+    heating = true;
   } else if (!strncmp(msg+1, kCoolQuery, strlen(kCoolQuery))) {
-    SQUIB_B.setLow();
+    heating = false;
   }
   
 }
 
 void setup()
 {
-  //SQUIB_A.init();
-  //SQUIB_B.init();
-
+  SQUIB_A.init();
+  SQUIB_B.init();
+  
   for (uint8_t i = 0; i < 6; i++) {
     pinMode(LEDS[i], OUTPUT);
   }
@@ -129,6 +133,16 @@ void setup()
 
 void loop()
 {
+  if (!heating) {
+    SQUIB_B.setLow();
+  } else {
+    if (heat_pwm % HEAT_PWM_MUL == 0) {
+      SQUIB_B.setHigh();
+    } else {
+      SQUIB_B.setLow();
+    }
+  }
+  ++heat_pwm;
 
   if(SerialUSB.available()){
     digitalWrite(LED1, HIGH);

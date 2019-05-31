@@ -120,8 +120,8 @@ void Squib::setHigh() {
 }
 
 void Squib::setLow() {
-  digitalWrite(PIN_FIREHI, HIGH);
-  digitalWrite(PIN_FIRELO, HIGH);
+  digitalWrite(PIN_FIREHI, LOW);
+  digitalWrite(PIN_FIRELO, LOW);
 }
 
 void Squib::ignite() {
