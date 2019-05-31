@@ -73,9 +73,18 @@ void Squib::disarm(){
   SQUIB_STATE = DISARMED;
 }
 
-void Squib::fire(unsigned long countdown, uint16_t fireTime){ // MILLISECONDS!!!
+bool Squib::fire(unsigned long countdown, uint16_t fireTime) { // MILLISECONDS!!!
 
-  if(countdown < 10000){ // ignore firing with countdowns of less than ten seconds, to give some recovery time for safety
+  
+  if(SQUIB_STATE == ARMED){
+    this->fireTime = fireTime;
+    ignite();
+    return true;
+  } else {
+    return false;
+  }
+  
+  /*if(countdown < 10000){ // ignore firing with countdowns of less than ten seconds, to give some recovery time for safety
     SQUIB_STATE = FIRE_ABORT;
     return;
   }
@@ -85,7 +94,7 @@ void Squib::fire(unsigned long countdown, uint16_t fireTime){ // MILLISECONDS!!!
     COUNTDOWN = countdown;
     COUNTDOWN_START = millis();
     this->fireTime = fireTime;
-  }
+    }*/
 }
 
 unsigned long Squib::updateCountdown(){
@@ -105,7 +114,17 @@ unsigned long Squib::updateCountdown(){
   return countdown_remaining;
 }
 
-void Squib::ignite(){
+void Squib::setHigh() {
+  digitalWrite(PIN_FIREHI, HIGH);
+  digitalWrite(PIN_FIRELO, HIGH);
+}
+
+void Squib::setLow() {
+  digitalWrite(PIN_FIREHI, HIGH);
+  digitalWrite(PIN_FIRELO, HIGH);
+}
+
+void Squib::ignite() {
   //sayPrayer();
   digitalWrite(PIN_FIREHI, HIGH);
   digitalWrite(PIN_FIRELO, HIGH);

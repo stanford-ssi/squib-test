@@ -24,7 +24,7 @@ const uint8_t LED_CHANNEL_GROUPS[] = {0b000111, 0b111000};
 #define BLINK_INTERVAL 100 // milliseconds
 unsigned long blinkPeriods = 0;
 unsigned long lastBlink = 0;
-unsigned long msg_interval = 3000;
+unsigned long msg_interval = 9000;
 
 // Squib firing pin definitions
 #define SQUIB_A_TESTLO  4 // PA08
@@ -40,6 +40,12 @@ unsigned long msg_interval = 3000;
 #define SQUIB_B_CONTHI A2 // PB09
 #define SQUIB_B_FIREHI  9 // PA07
 #define SQUIB_B_FIRELO  8 // PA06
+
+const char kHeatQuery[] = "heat";
+const char kCoolQuery[] = "cool";
+const char kArmQuery[] = "arm";
+const char kDisarmQuery[] = "disarm";
+const char kFireQuery[] = "fire";
 
 Uart SerialS6C(&sercom1, SRAD_RX, SRAD_TX, SERCOM_RX_PAD_2, UART_TX_PAD_0);
 
@@ -78,42 +84,45 @@ void barLEDs(int num){
 
 void receiveMsg(char* msg) {
   SerialUSB.println(msg);
-  if (msg[1] == 'a') {
+  if (!strncmp(msg+1, kArmQuery, strlen(kArmQuery))) {
     SQUIB_A.arm();
-
-  } else if (msg[1] == 'f') {
-    SQUIB_A.fire();
-    S6C.tx("Commanded fire");
-
-  } else if (msg[1] == 'd') {
+    S6C.tx("ARMED");
+  } else if (!strncmp(msg+1, kFireQuery, strlen(kFireQuery))) {
+    if (SQUIB_A.fire()) {
+      S6C.tx("FIRED");
+    } else {
+      S6C.tx("Not armed :(");
+    }
+  } else if (!strncmp(msg+1, kDisarmQuery, strlen(kDisarmQuery))) {
     SQUIB_A.disarm();
     S6C.tx("DISARMED");
     barLEDs(0);
-
-  } else if (msg[1] == 't') {
-    contTest(SQUIB_A);
+  } else if (!strncmp(msg+1, kHeatQuery, strlen(kHeatQuery))) {
+    SQUIB_B.setHigh();
+  } else if (!strncmp(msg+1, kCoolQuery, strlen(kCoolQuery))) {
+    SQUIB_B.setLow();
   }
+  
 }
 
 void setup()
 {
-  SQUIB_A.init();
-  SQUIB_B.init();
+  //SQUIB_A.init();
+  //SQUIB_B.init();
 
   for (uint8_t i = 0; i < 6; i++) {
     pinMode(LEDS[i], OUTPUT);
   }
 
   flourishLEDs();
-  //SQUIB_A.arm();
-  //SQUIB_A.fire();
 
   SerialUSB.begin(115200);
   //while (!SerialUSB);
 
   S6C.set_callback(receiveMsg);
   S6C.begin(9600, &SerialS6C);
-  while (!S6C);
+
+  //while (!S6C);
 
   //delay(5000);
 }
@@ -140,7 +149,7 @@ void loop()
   }
 
   S6C.rx();
-  displayState(SQUIB_A);
+  displayState(SQUIB_B);
   //displayState(SQUIB_B);
 
   if (millis() - last_report > msg_interval) {
@@ -156,15 +165,6 @@ void loop()
 void displayState(Squib& sq){
 
   long cnt = sq.updateCountdown();
-
-  // this logic doesn't work if using both squib channels but we're not so /shrug
-  if(cnt > 5000 && cnt < 20000){
-    msg_interval = 2000;
-  }else if(cnt > 0){
-    msg_interval = 1000;
-  }else{
-    msg_interval = 3000;
-  }
 
   switch(sq.getState()){
     case DISARMED:
@@ -214,29 +214,3 @@ void contTest(Squib sq){
   S6C.tx(out);
   SerialUSB.println(out);
 }
-
-// extern "C"
-// {
-//   void debug(const char *data)
-//   {
-//     Serial.println(data);
-//   }
-//
-//   void debug_hex(uint8_t data)
-//   {
-//     Serial.println(data, HEX);
-//   }
-//
-//   void debug_bin(uint8_t data)
-//   {
-//     Serial.println(data, BIN);
-//   }
-//
-//   uint8_t send(uint8_t data)
-//   {
-//     digitalWrite(slaveSelectPin, LOW);
-//     uint8_t val = SPI.transfer(data);
-//     digitalWrite(slaveSelectPin, HIGH);
-//     return val;
-//   }
-// }
