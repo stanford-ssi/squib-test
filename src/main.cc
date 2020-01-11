@@ -111,6 +111,7 @@ void receiveMsg(char* msg) {
 
 void setup()
 {
+  
   SQUIB_A.init();
   SQUIB_B.init();
   
@@ -129,6 +130,7 @@ void setup()
   //while (!S6C);
 
   //delay(5000);
+  
 }
 
 void loop()
