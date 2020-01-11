@@ -48,7 +48,7 @@ const char kDisarmQuery[] = "disarm";
 const char kFireQuery[] = "fire";
 
 bool heating = true;
-const int HEAT_PWM_MUL = 3;
+const int HEAT_PWM_MUL = 6;
 int heat_pwm = 0;
 
 Uart SerialS6C(&sercom1, SRAD_RX, SRAD_TX, SERCOM_RX_PAD_2, UART_TX_PAD_0);
