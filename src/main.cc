@@ -135,7 +135,7 @@ void setup()
 
   S6C.set_callback(receiveMsg);
   S6C.begin(9600, &SerialS6C);
-
+  
   //while (!S6C);
 
   //delay(5000);
@@ -144,17 +144,17 @@ void setup()
 // **************************************************************LOOP************************************************************************************************************
 void loop()
 {
- /* if (!heating) {
-    SQUIB_B.setLow();
-  } else {
-    if (heat_pwm % HEAT_PWM_MUL == 0) {
-      SQUIB_B.setHigh();
-    } else {
-      SQUIB_B.setLow();
-    }
-  }
-  ++heat_pwm;
-*/
+  /* if (!heating) {
+     SQUIB_B.setLow();
+     } else {
+     if (heat_pwm % HEAT_PWM_MUL == 0) {
+     SQUIB_B.setHigh();
+     } else {
+     SQUIB_B.setLow();
+     }
+     }
+     ++heat_pwm;
+  */
   if(SerialUSB.available()){
     digitalWrite(LED1, HIGH);
     char buf[64];
@@ -165,7 +165,7 @@ void loop()
   }
 
   static bool led_state = false;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+
   if(millis() - lastBlink > BLINK_INTERVAL){
     lastBlink = millis();
     blinkPeriods++;
@@ -174,8 +174,12 @@ void loop()
   }
 
   S6C.rx();
+
+  SQUIB_A.update();
+  SQUIB_B.update();
+  
   displayState(SQUIB_B);
-  //displayState(SQUIB_B);
+  displayState(SQUIB_A);
 
   if (millis() - last_report > msg_interval) {
     contTest(SQUIB_A);
@@ -192,35 +196,38 @@ void displayState(Squib& sq){
   long cnt = sq.updateCountdown();
 
   switch(sq.getState()){
-    case DISARMED:
+  case DISARMED:
+    writeLEDs(LED_CHANNEL_GROUPS[sq.channel], LOW);
+    break;
+  case ARMED:
+    if(blinkPeriods & 0b10){
+      writeLEDs(LED_CHANNEL_GROUPS[sq.channel], HIGH);
+    }else{
       writeLEDs(LED_CHANNEL_GROUPS[sq.channel], LOW);
-      break;
-    case ARMED:
-      if(blinkPeriods & 0b10){
-        writeLEDs(LED_CHANNEL_GROUPS[sq.channel], HIGH);
-      }else{
-        writeLEDs(LED_CHANNEL_GROUPS[sq.channel], LOW);
-      }
-      break;
-    case FIRE_COUNTDOWN:
-      if(cnt > 15000) barLEDs(4);
-      else if(cnt > 10000) barLEDs(3);
-      else if(cnt > 5000) barLEDs(2);
-      else barLEDs(1);
+    }
+    break;
+  case FIRING:
+    writeLEDs(LED_CHANNEL_GROUPS[sq.channel], HIGH);
+    break;
+  case FIRE_COUNTDOWN:
+    if(cnt > 15000) barLEDs(4);
+    else if(cnt > 10000) barLEDs(3);
+    else if(cnt > 5000) barLEDs(2);
+    else barLEDs(1);
 
-      break;
-    case POST_FIRE:
-      barLEDs(0);
+    break;
+  case POST_FIRE:
+    barLEDs(0);
 
-      if(blinkPeriods & 0b1){ // blink faster
-        writeLEDs(LED_CHANNEL_GROUPS[sq.channel], HIGH);
-      }else{
-        writeLEDs(LED_CHANNEL_GROUPS[sq.channel], LOW);
-      }
+    if(blinkPeriods & 0b1){ // blink faster
+      writeLEDs(LED_CHANNEL_GROUPS[sq.channel], HIGH);
+    }else{
+      writeLEDs(LED_CHANNEL_GROUPS[sq.channel], LOW);
+    }
 
-      break;
-    default:
-      break;
+    break;
+  default:
+    break;
   }
 }
 

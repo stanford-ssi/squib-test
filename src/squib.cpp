@@ -75,10 +75,10 @@ void Squib::disarm(){
 }
 
 bool Squib::fire(unsigned long countdown, uint16_t fireTime) { // MILLISECONDS!!!
-
   
   if(SQUIB_STATE == ARMED){
     this->fireTime = fireTime;
+    fireStartTime = millis();
     ignite();
     return true;
   } else {
@@ -96,6 +96,12 @@ bool Squib::fire(unsigned long countdown, uint16_t fireTime) { // MILLISECONDS!!
     COUNTDOWN_START = millis();
     this->fireTime = fireTime;
     }*/
+}
+
+void Squib::update() {
+  if (SQUIB_STATE == FIRING && fireStartTime + fireTime < millis()) {
+    disarm();
+  }
 }
 
 unsigned long Squib::updateCountdown(){
@@ -135,7 +141,7 @@ void Squib::ignite() {
   //digitalWrite(PIN_FIREHI, LOW);
   //digitalWrite(PIN_FIRELO, LOW);
 
-  SQUIB_STATE = POST_FIRE;
+  SQUIB_STATE = FIRING;
 }
 
 void Squib::sayPrayer(){

@@ -37,7 +37,8 @@ public:
   void arm();
   void setHigh();
   void setLow();
-  bool fire(unsigned long countdown = 20000, uint16_t fireTime = 5000); // milliseconds!!!
+  void update();
+  bool fire(unsigned long countdown = 20000, uint16_t fireTime = 10000); // milliseconds!!!
   unsigned long updateCountdown();
   fireState getState();
 
@@ -58,6 +59,7 @@ private:
   unsigned long COUNTDOWN;
   unsigned long COUNTDOWN_START;
   uint16_t fireTime = 1000; // milliseconds!!!
+  unsigned long fireStartTime;
 
 };
 
