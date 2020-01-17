@@ -71,6 +71,7 @@ void Squib::arm(){
 
 void Squib::disarm(){
   SQUIB_STATE = DISARMED;
+  setLow();
 }
 
 bool Squib::fire(unsigned long countdown, uint16_t fireTime) { // MILLISECONDS!!!
@@ -129,10 +130,10 @@ void Squib::ignite() {
   digitalWrite(PIN_FIREHI, HIGH);
   digitalWrite(PIN_FIRELO, HIGH);
 
-  delay(fireTime);
+  //delay(fireTime);
 
-  digitalWrite(PIN_FIREHI, LOW);
-  digitalWrite(PIN_FIRELO, LOW);
+  //digitalWrite(PIN_FIREHI, LOW);
+  //digitalWrite(PIN_FIRELO, LOW);
 
   SQUIB_STATE = POST_FIRE;
 }

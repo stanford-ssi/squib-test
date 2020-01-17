@@ -64,8 +64,8 @@ SSIradio S6C;
 
 unsigned long last_report = 0;
 
-Squib SQUIB_A = Squib(SQUIB_A_FIREHI, SQUIB_A_FIRELO, SQUIB_A_TESTHI, SQUIB_A_TESTLO, SQUIB_A_CONTHI, SQUIB_A_CONTLO, 0);
-Squib SQUIB_B = Squib(SQUIB_B_FIREHI, SQUIB_B_FIRELO, SQUIB_B_TESTHI, SQUIB_B_TESTLO, SQUIB_B_CONTHI, SQUIB_B_CONTLO, 1);
+Squib SQUIB_B = Squib(SQUIB_A_FIREHI, SQUIB_A_FIRELO, SQUIB_A_TESTHI, SQUIB_A_TESTLO, SQUIB_A_CONTHI, SQUIB_A_CONTLO, 0);
+Squib SQUIB_A = Squib(SQUIB_B_FIREHI, SQUIB_B_FIRELO, SQUIB_B_TESTHI, SQUIB_B_TESTLO, SQUIB_B_CONTHI, SQUIB_B_CONTLO, 1);
 
 void flourishLEDs(){
   for (uint8_t i = 0; i < 6; i++) {
@@ -90,15 +90,17 @@ void receiveMsg(char* msg) {
   SerialUSB.println(msg);
   if (!strncmp(msg+1, kArmQuery, strlen(kArmQuery))) {
     SQUIB_A.arm();
+    SQUIB_B.arm();
     S6C.tx("ARMED");
   } else if (!strncmp(msg+1, kFireQuery, strlen(kFireQuery))) {
-    if (SQUIB_A.fire()) {
+    if (SQUIB_A.fire() && SQUIB_B.fire()) {
       S6C.tx("FIRED");
     } else {
       S6C.tx("Not armed :(");
     }
   } else if (!strncmp(msg+1, kDisarmQuery, strlen(kDisarmQuery))) {
     SQUIB_A.disarm();
+    SQUIB_B.disarm();
     S6C.tx("DISARMED");
     barLEDs(0);
   } else if (!strncmp(msg+1, kHeatQuery, strlen(kHeatQuery))) {
@@ -108,20 +110,27 @@ void receiveMsg(char* msg) {
   }
   
 }
-
+// ****************************************************************SETUP****************************************************************************************************
 void setup()
 {
-  
+
+  SerialUSB.begin(115200);
+  SerialUSB.println("f");
+  Serial.println();
   SQUIB_A.init();
-  SQUIB_B.init();
+  SQUIB_B.init(); 
+
+ 
+  SerialUSB.println("fired");
+  SerialUSB.flush();
+
+
   
   for (uint8_t i = 0; i < 6; i++) {
     pinMode(LEDS[i], OUTPUT);
   }
 
-  flourishLEDs();
 
-  SerialUSB.begin(115200);
   //while (!SerialUSB);
 
   S6C.set_callback(receiveMsg);
@@ -132,10 +141,10 @@ void setup()
   //delay(5000);
   
 }
-
+// **************************************************************LOOP************************************************************************************************************
 void loop()
 {
-  if (!heating) {
+ /* if (!heating) {
     SQUIB_B.setLow();
   } else {
     if (heat_pwm % HEAT_PWM_MUL == 0) {
@@ -145,7 +154,7 @@ void loop()
     }
   }
   ++heat_pwm;
-
+*/
   if(SerialUSB.available()){
     digitalWrite(LED1, HIGH);
     char buf[64];
@@ -156,7 +165,7 @@ void loop()
   }
 
   static bool led_state = false;
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
   if(millis() - lastBlink > BLINK_INTERVAL){
     lastBlink = millis();
     blinkPeriods++;
